@@ -1,9 +1,9 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "ArtStar Docs",
   "colors": {
-    "primary": "#16A34A",
+    "primary": "#000000",
     "light": "#07C983",
     "dark": "#15803D"
   },
@@ -14,70 +14,50 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Introduction",
+            "group": "介绍",
             "pages": [
-              "introduction",
-              "development-path",
-              "technicalf-security"
+              "/introduction/preface",
+              "/introduction/development-path"
             ]
           },
           {
-            "group": "Customization",
+            "group": "技术",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "/technical/technical-security"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "社区",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "/community/community-economic"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "法律",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
+              "legal/legal-regulatory"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "影响",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "impact/social-impact"
             ]
           }
         ]
       }
+      
     ],
     "global": {
       "anchors": [
+          {
+          "anchor": "官网",
+          "href": "https://artstarex.com",
+          "icon": "home"
+        },   
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "anchor": "博客",
+          "href": "https://artstarex.com/blog",
           "icon": "newspaper"
         }
       ]
@@ -91,32 +71,22 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:hi@artstarex.com"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
+    ]
   },
   "contextual": {
     "options": [
      "copy",
      "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
+     "chatgpt"
    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/0xartstar",
+      "x": "https://x.com/artstarex",
+      "telegram": "https://t.me/artstarex"
     }
   }
 }
