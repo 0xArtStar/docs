@@ -11,50 +11,38 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "文档",
         "groups": [
           {
             "group": "介绍",
-            "pages": [
-              "/introduction/preface",
-              "/introduction/development-path"
-            ]
+            "pages": ["/introduction/preface", "/introduction/development-path"]
           },
           {
             "group": "技术",
-            "pages": [
-              "/technical/technical-security"
-            ]
+            "pages": ["/technical/technical-security"]
           },
           {
             "group": "社区",
-            "pages": [
-              "/community/community-economic"
-            ]
+            "pages": ["/community/community-economic"]
           },
           {
             "group": "法律",
-            "pages": [
-              "legal/legal-regulatory"
-            ]
+            "pages": ["legal/legal-regulatory"]
           },
           {
             "group": "影响",
-            "pages": [
-              "impact/social-impact"
-            ]
+            "pages": ["impact/social-impact"]
           }
         ]
       }
-      
     ],
     "global": {
       "anchors": [
-          {
+        {
           "anchor": "官网",
           "href": "https://artstarex.com",
           "icon": "home"
-        },   
+        },
         {
           "anchor": "博客",
           "href": "https://artstarex.com/blog",
@@ -70,23 +58,23 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
+        "label": "联系我们",
         "href": "mailto:hi@artstarex.com"
       }
     ]
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt"
-   ]
   },
   "footer": {
     "socials": {
       "github": "https://github.com/0xartstar",
       "x": "https://x.com/artstarex",
       "telegram": "https://t.me/artstarex"
+    }
+  },
+  "errors": {
+    "404": {
+      "redirect": false,
+      "title": "I can't be found",
+      "description": "What ever **happened** to this _page_?"
     }
   }
 }
