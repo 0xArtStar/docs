@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "palm",
   "name": "ArtStar Docs",
   "colors": {
     "primary": "#000000",
@@ -9,47 +9,102 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "文档",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "介绍",
-            "pages": ["/introduction/preface", "/introduction/development-path"]
-          },
-          {
-            "group": "技术",
-            "pages": ["/technical/technical-security"]
-          },
-          {
-            "group": "社区",
-            "pages": ["/community/community-economic"]
-          },
-          {
-            "group": "法律",
-            "pages": ["legal/legal-regulatory"]
-          },
-          {
-            "group": "影响",
-            "pages": ["impact/social-impact"]
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Introduction",
+                "pages": [
+                  "/introduction/en/preface",
+                  "/introduction/en/development-path"
+                ]
+              },
+              {
+                "group": "Technology",
+                "pages": ["/technical/en/technical-security"]
+              },
+              {
+                "group": "Community",
+                "pages": ["/community/en/community-economic"]
+              },
+              {
+                "group": "Legal",
+                "pages": ["/legal/en/legal-regulatory"]
+              },
+              {
+                "group": "Impact",
+                "pages": ["/impact/en/social-impact"]
+              }
+            ]
           }
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "官网",
-          "href": "https://artstarex.com",
-          "icon": "home"
-        },
-        {
-          "anchor": "博客",
-          "href": "https://artstarex.com/blog",
-          "icon": "newspaper"
+        ],
+        "global": {
+          "anchors": [
+            {
+              "anchor": "Website",
+              "href": "https://artstarex.com",
+              "icon": "home"
+            },
+            {
+              "anchor": "Blog",
+              "href": "https://blog.artstarex.com",
+              "icon": "newspaper"
+            }
+          ]
         }
-      ]
-    }
+      },
+      {
+        "language": "cn",
+        "tabs": [
+          {
+            "tab": "文档",
+            "groups": [
+              {
+                "group": "介绍",
+                "pages": [
+                  "/introduction/zh/前言",
+                  "/introduction/zh/发展路径"
+                ]
+              },
+              {
+                "group": "技术",
+                "pages": ["/technical/zh/技术及安全"]
+              },
+              {
+                "group": "社区",
+                "pages": ["/community/zh/社区经济"]
+              },
+              {
+                "group": "法律",
+                "pages": ["/legal/zh/法律与合规"]
+              },
+              {
+                "group": "影响",
+                "pages": ["/impact/zh/社会影响"]
+              }
+            ]
+          }
+        ],
+        "global": {
+          "anchors": [
+            {
+              "anchor": "官网",
+              "href": "https://artstarex.com",
+              "icon": "home"
+            },
+            {
+              "anchor": "博客",
+              "href": "https://blog.artstarex.com",
+              "icon": "newspaper"
+            }
+          ]
+        }
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -58,7 +113,7 @@
   "navbar": {
     "links": [
       {
-        "label": "联系我们",
+        "label": "Contact Us",
         "href": "mailto:hi@artstarex.com"
       }
     ]
