@@ -118,6 +118,13 @@
       }
     ]
   },
+  "contextual": {
+    "options": [
+     "copy",
+     "view",
+     "chatgpt"
+   ]
+  },
   "footer": {
     "socials": {
       "github": "https://github.com/0xartstar",
