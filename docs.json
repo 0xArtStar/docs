@@ -25,19 +25,28 @@
               },
               {
                 "group": "Technology",
-                "pages": ["/technical/en/technical-security"]
+                "pages": [
+                  "/technical/en/technical-security"
+                ]
               },
               {
                 "group": "Community",
-                "pages": ["/community/en/community-economic"]
+                "pages": [
+                  "/community/en/community-economic",
+                  "/community/en/Refrral-and-Reward-Program"
+                ]
               },
               {
                 "group": "Legal",
-                "pages": ["/legal/en/legal-regulatory"]
+                "pages": [
+                  "/legal/en/legal-regulatory"
+                ]
               },
               {
                 "group": "Impact",
-                "pages": ["/impact/en/social-impact"]
+                "pages": [
+                  "/impact/en/social-impact"
+                ]
               }
             ]
           }
@@ -72,19 +81,28 @@
               },
               {
                 "group": "技术",
-                "pages": ["/technical/zh/技术及安全"]
+                "pages": [
+                  "/technical/zh/技术及安全"
+                ]
               },
               {
                 "group": "社区",
-                "pages": ["/community/zh/社区经济"]
+                "pages": [
+                  "/community/zh/社区经济",
+                  "/community/zh/积分推荐和返现奖励方案"
+                ]
               },
               {
                 "group": "法律",
-                "pages": ["/legal/zh/法律与合规"]
+                "pages": [
+                  "/legal/zh/法律与合规"
+                ]
               },
               {
                 "group": "影响",
-                "pages": ["/impact/zh/社会影响"]
+                "pages": [
+                  "/impact/zh/社会影响"
+                ]
               }
             ]
           }
@@ -120,10 +138,10 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt"
-   ]
+      "copy",
+      "view",
+      "chatgpt"
+    ]
   },
   "footer": {
     "socials": {
