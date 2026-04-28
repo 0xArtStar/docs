@@ -30,6 +30,13 @@
                 ]
               },
               {
+                "group": "Model",
+                "pages": [
+                  "/model/en/mathematical-reconstruction",
+                  "/model/en/intrinsic-attributes-of-art"
+                ]
+              },
+              {
                 "group": "Community",
                 "pages": [
                   "/community/en/community-economic",
