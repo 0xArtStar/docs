@@ -23,12 +23,17 @@ $$
 
 - $r_m$, $\sigma_m$: Market portfolio return and volatility
 - $r_a$, $\sigma_a$: Corresponding parameters for fine art
+- $w^*_{\text{risky}}$: The optimal allocation weight for risky assets (e.g., the stock market portfolio).
+- $r_f$: The risk-free interest rate.
+- $\rho$: The correlation coefficient between the returns of fine art and the market portfolio. A lower $\rho$ indicates more significant marginal gains from diversification.
 
-<img src="/images/correlation_frontier.svg" alt="Efficient Frontier Improvement via Low Correlation" />
+<Frame>
+  <img src="/images/correlation_frontier.svg" alt="Efficient Frontier Improvement via Low Correlation" />
+</Frame>
 
 <Note>
 **Key Facts**
-Numerous empirical studies (such as Mei & Moses) show that the long-term correlation coefficient between the art index and the S&P 500 is only in the **0.1–0.3** range, much lower than the 0.6–0.8 for real estate and stocks.
+Numerous empirical studies (such as [Mei & Moses, 2002](https://doi.org/10.1257/000282802762024620)) show that the long-term correlation coefficient between the art index and the S&P 500 is only in the **0.1–0.3** range, much lower than the 0.6–0.8 for real estate and stocks.
 
 When $\rho$ is significantly less than 1, the portfolio's efficient frontier shifts to the upper left.
 Even if the Sharpe ratio of art itself is not astonishing, the diversification benefits brought by its low correlation are enough to elevate the Sharpe ratio of the entire portfolio.
@@ -41,11 +46,15 @@ This is not an externally endowed feature, but stems from the fact that the valu
 ## <Icon icon="shield-halved" /> Inflation Hedging Capability: Natural Immunity of Real Assets
 
 Fine art is a real asset.
-The Fisher equation decomposes the nominal interest rate $i$ into the real interest rate $r$ and the expected inflation rate $\pi^e$:
+The [Fisher (1930) equation](https://books.google.com/books?id=YhS5AAAAIAAJ) decomposes the nominal interest rate $i$ into the real interest rate $r$ and the expected inflation rate $\pi^e$:
 
 $$
 1+i = (1+r)(1+\pi^e)
 $$
+
+- $i$: Nominal interest rate.
+- $r$: Real interest rate.
+- $\pi^e$: Expected inflation rate.
 
 During periods of high inflation, nominal interest rates rise with inflation, the prices of fixed-income assets (like bonds) fall, and the purchasing power of money is eroded.
 Conversely, the prices of real assets typically rise with the price level.
@@ -56,10 +65,18 @@ $$
 \Delta \ln P_{\text{art},t} = \alpha + \beta \cdot \pi_t + \varepsilon_t
 $$
 
+- $\Delta \ln P_{\text{art},t}$: The logarithmic return of art prices at time $t$.
+- $\alpha$: The base return of art, independent of inflation.
+- $\beta$: The sensitivity of art returns to inflation (inflation beta). If $\beta > 1$, it indicates that art possesses value appreciation capabilities that exceed inflation.
+- $\pi_t$: The actual inflation rate at time $t$.
+- $\varepsilon_t$: The random error term.
+
 - If $\beta \approx 1$, the art price roughly tracks inflation one-to-one.
 - If $\beta > 1$, it not only hedges against inflation but also achieves substantial purchasing power growth.
 
-<img src="/images/inflation_hedge.svg" alt="The Tracking Relationship Between Art Returns and Inflation" />
+<Frame>
+  <img src="/images/inflation_hedge.svg" alt="The Tracking Relationship Between Art Returns and Inflation" />
+</Frame>
 
 <Note>
 **Data Evidence**
@@ -80,17 +97,24 @@ Investors face two types of assets:
 - **Financial Assets**: May suffer default, freezing, or going to zero during disasters.
 - **Fine Art**: The recovery rate $\phi_{\text{art}}$ during disasters is far higher than $\phi_{\text{fin}}$.
 
-Under Barro's disaster risk framework, the risk-free rate of an asset is determined by the following equation:
+Under [Barro's (2006)](https://doi.org/10.1162/qjec.2006.121.3.823) disaster risk framework, the risk-free rate of an asset is determined by the following equation:
 
 $$
 r_f = \rho + \gamma g - \frac{1}{2}\gamma^2\sigma^2 - \lambda \cdot \mathbb{E}[e^{-\gamma \cdot \ln(1-b)} - 1]
 $$
 
-- $\lambda$: Probability of disaster occurrence
-- $b$: Proportion of asset loss in the disaster
-- $\mathbb{E}[e^{-\gamma \cdot \ln(1-b)}]$: Expected utility loss from the disaster shock
+- $r_f$: The risk-free interest rate.
+- $\rho$: The investor's time preference rate.
+- $\gamma$: The coefficient of relative risk aversion.
+- $g$: The expected economic growth rate during normal times.
+- $\sigma^2$: The variance of economic growth during normal times.
+- $\lambda$: Probability of a disaster occurrence (e.g., war, depression).
+- $b$: Proportion of asset value loss in the disaster. Traditional financial assets often have a $b$ close to 1, while art has a significantly smaller $b$ due to its portability and safe-haven attributes.
+- $\mathbb{E}[\cdot]$: Expected value operator, reflecting the expected compensation for the sharp increase in marginal utility caused by the disaster shock.
 
-<img src="/images/disaster_recovery.svg" alt="Asset Value Retention Rates Under Extreme Disasters" />
+<Frame>
+  <img src="/images/disaster_recovery.svg" alt="Asset Value Retention Rates Under Extreme Disasters" />
+</Frame>
 
 <Note>
 **The Unique Position of Art**
@@ -113,8 +137,12 @@ $$
 U = \mathbb{E}[r_p] - \frac{\gamma}{2}\sigma_p^2 + \delta \cdot D
 $$
 
-- $D$: The spiritual dividend brought by holding art (aesthetic pleasure, social prestige, sense of cultural participation)
-- $\delta$: The utility weight assigned by the investor to a unit of spiritual dividend
+- $U$: The total utility of the investor.
+- $\mathbb{E}[r_p]$: The expected monetary return rate of the portfolio.
+- $\gamma$: The investor's coefficient of risk aversion.
+- $\sigma_p^2$: The variance of the portfolio's returns.
+- $D$: The spiritual dividend brought by holding art (aesthetic pleasure, social prestige, sense of cultural participation, etc., non-monetary returns).
+- $\delta$: The utility conversion weight assigned by the investor to a unit of spiritual dividend. This utility directly compensates for the compromise on nominal monetary returns.
 
 In equilibrium, if two assets have identical risk profiles, but one provides a positive spiritual dividend $D>0$, investors are willing to accept a lower nominal return to hold it:
 
@@ -122,7 +150,9 @@ $$
 E[r_{\text{art}}] = E[r_{\text{fin}}] - \delta
 $$
 
-<img src="/images/utility_premium.svg" alt="The Spiritual Dividend Premium in the Utility Function" />
+<Frame>
+  <img src="/images/utility_premium.svg" alt="The Spiritual Dividend Premium in the Utility Function" />
+</Frame>
 
 <Note>
 $\delta$ is the price concession the market pays for "enjoyment."
@@ -143,16 +173,33 @@ $$
 Q_s^{\text{art}} = \bar{Q} \quad \text{(Strictly fixed)}
 $$
 
+- $Q_s^{\text{art}}$: The market supply quantity of fine art.
+- $\bar{Q}$: The fixed upper limit of the stock. Since deceased masters cannot create new works, the number of their authentic pieces is a hard constraint, and may even decrease over time due to damage.
+
 When demand rises due to cultural consensus, wealth growth, or the entry of emerging market collectors, prices have only one way to go:
 
 $$
 \frac{dP}{dD} \to \infty \quad \text{(When supply is perfectly rigid)}
 $$
 
-<img src="/images/inelastic_supply.svg" alt="Price Leap Under Perfectly Rigid Supply" />
+- $P$: The price of fine art.
+- $D$: The quantity of market demand.
+- When the demand curve shifts to the right, because the supply curve is vertical (perfectly inelastic), all incremental demand translates into a surge in price, creating an extremely strong anti-dilution effect.
+
+<Frame>
+  <img src="/images/inelastic_supply.svg" alt="Price Leap Under Perfectly Rigid Supply" />
+</Frame>
 
 <Note>
 The simplest result of the supply and demand graph is a massive leap in price.
 This fixed-quantity, anti-dilution characteristic is almost solely partially possessed by gold in the financial world, but gold still has new annual mining output (about 1.5%–2%).
 However, the net supply of masterpieces by deceased masters is **zero or negative** (fires and war damage will only reduce the existing stock).
 </Note>
+
+---
+
+## References
+
+1. Mei, J., & Moses, M. (2002). *Art as an Investment and the Underperformance of Masterpieces*. American Economic Review. [Read Document](https://doi.org/10.1257/000282802762024620)
+2. Fisher, I. (1930). *The Theory of Interest*. [Read Document](https://books.google.com/books?id=YhS5AAAAIAAJ)
+3. Barro, R. J. (2006). *Rare Disasters and Asset Markets in the Twentieth Century*. The Quarterly Journal of Economics. [Read Document](https://doi.org/10.1162/qjec.2006.121.3.823)

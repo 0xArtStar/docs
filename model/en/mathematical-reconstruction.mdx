@@ -15,7 +15,7 @@ RWA tokenization does not overturn the basic laws of asset pricing, but rather r
 
 ### The Traditional Dilemma
 
-Longstaff's (1995) classic model demonstrates that "non-tradability" causes a significant discount on asset value.
+[Longstaff's (1995)](https://doi.org/10.1111/j.1540-6261.1995.tb05197.x) classic model demonstrates that "non-tradability" causes a significant discount on asset value.
 This discount is essentially the value of a **Lookback Option**—when unable to sell, investors are forced to bear the risk of the price falling back from its peak.
 The longer the lock-up period $T$, the greater the discount.
 
@@ -23,16 +23,21 @@ $$
 \text{Discount} = \frac{1}{T} \int_0^T \exp(-r\tau) \, \mathbb{E}\left[ \max\left(0, \max_{0 \le s \le \tau} (m_s - m_0)\right) \right] d\tau
 $$
 
-- $T$: The "lock-up period" during which the asset must be held and cannot be traded
-- $m_s$: The log-price process of the underlying asset (Geometric Brownian Motion)
-- $r$: The risk-free interest rate
+- $T$: The "lock-up period" during which the asset must be held and cannot be traded, representing the time window when investors are deprived of liquidity rights.
+- $m_s$: The log-price process of the underlying asset (usually assumed to follow Geometric Brownian Motion), representing the potential fair market value of the asset at time $s$.
+- $m_0$: The initial log-price of the asset.
+- $r$: The risk-free interest rate, used to discount future option payoffs.
+- $\tau$: Integration variable, representing a moment in the $[0, T]$ interval.
+- $\mathbb{E}[\cdot]$: Expected value operator, reflecting investors' expectations of the missed peak (the intrinsic value of the Lookback Option) when they cannot accurately foresee future price trends.
 
 ### The RWA Advantage
 
 After tokenization, fragments can be traded on DEXs at any time, compressing $T$ from several years to almost zero.
 Even if the asset's fundamentals remain unchanged, merely eliminating the non-tradable period can cause the theoretical value to jump significantly.
 
-<img src="/images/liquidity_discount.svg" alt="Liquidity Discount Increasing with Lock-up Period" />
+<Frame>
+  <img src="/images/liquidity_discount.svg" alt="Liquidity Discount Increasing with Lock-up Period" />
+</Frame>
 
 <Note>
 When $T \to 0$, the asset not only eliminates the liquidity discount but also generates a **Liquidity Premium**.
@@ -48,7 +53,7 @@ Art transforms from a "static asset" into an "interest-bearing asset" or "credit
 
 ### The Traditional Dilemma
 
-In the Markowitz mean-variance framework, art can improve the efficient frontier.
+In the [Markowitz (1952)](https://doi.org/10.1111/j.1540-6261.1952.tb01525.x) mean-variance framework, art can improve the efficient frontier.
 But the realistic constraint is: a single piece of art starts at a million dollars and is indivisible, constituting an investment floor $M_{\min}$.
 
 The optimization problem before fragmentation:
@@ -62,7 +67,12 @@ $$
 \end{align}
 $$
 
-$W_0$ is the initial wealth, forcing a large number of small investors to have $w_{\text{art}} = 0$.
+- $w$: The vector of asset weights (including art and other financial assets), reflecting the proportion of capital allocated to different assets.
+- $\Sigma$: The covariance matrix of asset returns, used to measure the overall volatility (risk) of the investment portfolio.
+- $\mu$: The vector of expected returns for each asset.
+- $r_{\text{target}}$: The target expected return set by the investor.
+- $W_0$: The initial total wealth of the investor.
+- $M_{\min}$: The minimum investment threshold for a single piece in the traditional art market (usually reaching the million-dollar level), which is the core rigid constraint preventing small investors (with small $W_0$) from allocating to art (i.e., forcing $w_{\text{art}} = 0$).
 
 ### The RWA Advantage
 
@@ -71,7 +81,9 @@ The constraint $w_{\text{art}} \cdot W_0 \ge M_{\text{token}}$ almost always hol
 
 **Result**: The feasible region expands, the efficient frontier shifts significantly up or to the left, and the overall Sharpe ratio improves.
 
-<img src="/images/markowitz_frontier.svg" alt="Markowitz Efficient Frontier: Traditional Portfolio vs. Introducing Art RWA" />
+<Frame>
+  <img src="/images/markowitz_frontier.svg" alt="Markowitz Efficient Frontier: Traditional Portfolio vs. Introducing Art RWA" />
+</Frame>
 
 <Note>
 Traditional art can almost never undergo **Dynamic Rebalancing**.
@@ -87,15 +99,18 @@ It even allows small capitals to engage in **Dollar Cost Averaging (DCA)**.
 
 ### The Traditional Dilemma
 
-Kyle's (1985) market microstructure model characterizes the information efficiency of prices:
+[Kyle's (1985)](https://doi.org/10.2307/1913210) market microstructure model characterizes the information efficiency of prices:
 
 $$
 \Delta p_t = \lambda \cdot (y_t + u_t), \quad \lambda = \frac{2\sigma_v}{\sigma_u}
 $$
 
-- $\lambda$: Kyle's lambda, the price impact of unit net order flow (the inverse of market depth)
-- $\sigma_v$: Uncertainty of asset value (degree of information asymmetry)
-- $\sigma_u$: Number of noise trades
+- $\Delta p_t$: The price change (price impact), reflecting the actual degree to which trading pushes the market price up or down.
+- $\lambda$: Kyle's lambda (the inverse of market depth), measuring the market's liquidity level. A smaller $\lambda$ indicates a deeper market capable of absorbing large orders.
+- $y_t$: The order flow of informed traders (insiders), who trade based on private information about the asset's true value.
+- $u_t$: The order flow of noise traders (liquidity traders), usually assumed to fluctuate randomly without carrying fundamental asset information.
+- $\sigma_v$: The prior uncertainty of the asset's true value (degree of information asymmetry), which is extremely high in the traditional art market.
+- $\sigma_u$: The standard deviation of noise trading volume, representing the activity level of uninformed trading in the market.
 
 The speed at which information is incorporated into prices is positively correlated with the total number and diversity of market participants.
 
@@ -135,24 +150,32 @@ Market making for traditional art relies on the capital of brokers, resulting in
 
 ### The RWA Advantage
 
-The AMM constant product function directly provides liquidity without the need for matching buy and sell orders:
+The [AMM (Automated Market Maker) constant product model](https://uniswap.org/whitepaper.pdf) directly provides liquidity without the need for matching buy and sell orders:
 
 $$
 x \cdot y = k
 $$
 
-$x$ = Number of art tokens in the pool, $y$ = Number of stablecoins.
+- $x$: The reserve amount of art tokens in the liquidity pool.
+- $y$: The reserve amount of quote tokens (e.g., stablecoins like USDC) in the liquidity pool.
+- $k$: The constant product, representing the overall depth of the liquidity pool. The $k$ value remains unchanged as long as liquidity is not added or removed.
+
 The purchase slippage is approximately:
 
 $$
 \text{Price impact} \approx \frac{\Delta x}{x}
 $$
 
+- $\Delta x$: The amount of art tokens the trader buys (or sells).
+- $\text{Price impact}$: The marginal percentage change in price caused by the imbalance in the pool's asset ratio due to the trade. When $x$ (pool depth) is much larger than $\Delta x$, the price impact approaches zero.
+
 The larger the $k$, the smaller the price impact for the same trading volume.
 Fragmentation allows small token holders to provide liquidity, pushing $k$ exponentially beyond the capital of traditional market makers.
 The effective spread of tokenized art is far lower than the traditional auction commission (20%–30%), achieving mathematically **decentralized liquidity**.
 
-<img src="/images/amm_curve.svg" alt="AMM Constant Product Liquidity Curve" />
+<Frame>
+  <img src="/images/amm_curve.svg" alt="AMM Constant Product Liquidity Curve" />
+</Frame>
 
 <Note>
 Under the Uniswap V3 model, LPs can concentrate funds in a specific price range $[P_a, P_b]$.
@@ -168,13 +191,14 @@ Even mid-to-small cap art RWAs can offer a low-slippage experience comparable to
 
 ### Theoretical Model
 
-The value of fungible tokens has a super-linear relationship with the size of the community network (a modified form of Metcalfe's Law):
+A modified form of [Metcalfe's Law (2013)](https://ieeexplore.ieee.org/document/6560662) states that the value of fungible tokens has a super-linear relationship with the size of the community network:
 
 $$
 V \propto n \log n \quad \text{or} \quad V \propto n^2
 $$
 
-$n$ = Number of token holders or active users.
+- $V$: The total value of the network, which in the context of tokenized art is reflected in the cultural consensus premium, brand authorization potential, and token market capitalization.
+- $n$: The number of nodes in the network (token holders, active users, curators, or community members). For a traditional single piece of art, $n$ is often limited to single digits (a single collector and a few audiences), while RWA tokenization amplifies $n$ exponentially, thereby triggering non-linear value growth in the network.
 
 ### The RWA Advantage
 
@@ -182,7 +206,9 @@ When tokenized art is communally owned, each holder naturally becomes a propagat
 The addition of every new collector not only brings buying power but also contributes +1 network effect to the art's cultural prestige.
 The low barrier to entry allows $n$ to grow exponentially, activating super-linear value feedback—a mathematical structure that a single physical collection cannot achieve.
 
-<img src="/images/metcalfe_value.svg" alt="Network Value Growth Model Under Metcalfe's Law" />
+<Frame>
+  <img src="/images/metcalfe_value.svg" alt="Network Value Growth Model Under Metcalfe's Law" />
+</Frame>
 
 <Note>
 Holders can exercise voting rights through a DAO—deciding on art lending, secondary creation authorization, etc.
@@ -191,3 +217,13 @@ Governance rights themselves have pricing room.
 
 The larger the $n$, the higher the cultural meme and commercial authorization income, leading to a qualitative leap in the DCF model.
 </Note>
+
+---
+
+## References
+
+1. Longstaff, F. A. (1995). *How Much Can Marketability Affect Security Values?*. The Journal of Finance. [Read Document](https://doi.org/10.1111/j.1540-6261.1995.tb05197.x)
+2. Markowitz, H. (1952). *Portfolio Selection*. The Journal of Finance. [Read Document](https://doi.org/10.1111/j.1540-6261.1952.tb01525.x)
+3. Kyle, A. S. (1985). *Continuous Auctions and Insider Trading*. Econometrica. [Read Document](https://doi.org/10.2307/1913210)
+4. Adams, H., et al. (2020). *Uniswap v3 Core*. [Read Document](https://uniswap.org/whitepaper.pdf)
+5. Metcalfe, B. (2013). *Metcalfe's Law after 40 Years of Ethernet*. Computer. [Read Document](https://ieeexplore.ieee.org/document/6560662)
