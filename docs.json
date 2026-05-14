@@ -29,6 +29,12 @@
                 ]
               },
               {
+                "group": "Example",
+                "pages": [
+                  "/example/zh/演示"
+                ]
+              },
+              {
                 "group": "Technology",
                 "pages": [
                   "/technical/en/technical-security"
