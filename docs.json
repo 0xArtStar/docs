@@ -1,4 +1,9 @@
 {
+    "banner": {
+    "content": "🚀 v0.1.0 已发布：查看 /changelog",
+    "dismissible": true,
+    "type": "info"
+  },
   "$schema": "https://mintlify.com/docs.json",
   "theme": "palm",
   "name": "ArtStar Docs",
@@ -174,3 +179,4 @@
     }
   }
 }
+
