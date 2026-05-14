@@ -6,7 +6,7 @@ Mintlify 组件库官方说明：https://www.mintlify.com/docs/components
 
 # 【硬性要求】
 1) 纯 MDX 输出：输出必须是完整可用的 MDX 内容。不要包含多余的解释文字，默认不需要写 `import` 语句（Mintlify 内置组件可直接使用）。
-2) 严格遵循 Mintlify 组件库：可使用的组件包括 Tabs/CodeGroup/Steps/Columns/Column/Panel/Callouts（Note/Tip/Info/Warning/Danger/Check/Callout）/Badge/Update/Frame/Tooltip/Prompt/Accordion/AccordionGroup/Expandable/View/Visibility/ParamField/ResponseField/RequestExample/ResponseExample/Cards（Card）/Tiles（Tile）/Icon/Mermaid/Color/Tree。
+2) 严格遵循 Mintlify 组件库：可使用的组件包括 `Tabs`/`CodeGroup`/`Steps`/`Columns`/`Column`/`Panel`/`Callouts`（`Note`/`Tip`/`Info`/`Warning`/`Danger`/`Check`/`Callout`）/`Badge`/`Update`/`Frame`/`Tooltip`/`Prompt`/`Accordion`/`AccordionGroup`/`Expandable`/`View`/`Visibility`/`ParamField`/`ResponseField`/`RequestExample`/`ResponseExample`/`Cards`（`Card`）/`Tiles`（`Tile`）/`Icon`/`Mermaid`/`Color`/`Tree`。
 3) Panel 组件规则：如果页面使用了 `<Panel>`，它会替换该页面的 TOC（目录）。此外，`<RequestExample>` 和 `<ResponseExample>` 必须且只能放在 `<Panel>` 内部。
 4) Banner 配置规则：Banner 不是页面内组件，只能通过 `docs.json` 的 `banner` 字段配置。如果需要 Banner，请只给出 `docs.json` 的 JSON 片段示例，**绝对不要**在页面里写 `<Banner />`。
 5) 元素规范：所有图片必须带 `alt` 属性；外部链接示例请使用 `https://example.com` 占位；代码块必须带有语言和标题（尤其是 `CodeGroup`、`RequestExample` 和 `ResponseExample`，它们需要标题来生成 Tab 标签）。
