@@ -1,5 +1,5 @@
 {
-    "banner": {
+  "banner": {
     "content": "🚀 v0.1.0 已发布：查看 /changelog",
     "dismissible": true,
     "type": "info"
@@ -30,9 +30,7 @@
               },
               {
                 "group": "Technology",
-                "pages": [
-                  "/technical/en/technical-security"
-                ]
+                "pages": ["/technical/en/technical-security"]
               },
               {
                 "group": "Model",
@@ -51,15 +49,11 @@
               },
               {
                 "group": "Legal",
-                "pages": [
-                  "/legal/en/legal-regulatory"
-                ]
+                "pages": ["/legal/en/legal-regulatory"]
               },
               {
                 "group": "Impact",
-                "pages": [
-                  "/impact/en/social-impact"
-                ]
+                "pages": ["/impact/en/social-impact"]
               }
             ]
           }
@@ -87,16 +81,11 @@
             "groups": [
               {
                 "group": "介绍",
-                "pages": [
-                  "/introduction/zh/前言",
-                  "/introduction/zh/发展路径"
-                ]
+                "pages": ["/introduction/zh/前言", "/introduction/zh/发展路径"]
               },
               {
                 "group": "技术",
-                "pages": [
-                  "/technical/zh/技术及安全"
-                ]
+                "pages": ["/technical/zh/技术及安全"]
               },
               {
                 "group": "模型",
@@ -115,15 +104,11 @@
               },
               {
                 "group": "法律",
-                "pages": [
-                  "/legal/zh/法律与合规"
-                ]
+                "pages": ["/legal/zh/法律与合规"]
               },
               {
                 "group": "影响",
-                "pages": [
-                  "/impact/zh/社会影响"
-                ]
+                "pages": ["/impact/zh/社会影响"]
               }
             ]
           }
@@ -158,11 +143,7 @@
     ]
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt"
-    ]
+    "options": ["copy", "view", "chatgpt"]
   },
   "footer": {
     "socials": {
@@ -179,4 +160,3 @@
     }
   }
 }
-
