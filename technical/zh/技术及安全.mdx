@@ -1,45 +1,248 @@
 ---
 title: "技术及安全"
-description: "通过主流成熟公链网络及跨链技术进行资产代币的管理工作"
+description: "ArtStar 基于 ERC-20 协议实现 RWA 代币化，采用链上签名验证与合规管理合约构建完整的合规管理体系"
 icon: "lock"
 ---
 
-ArtStar 你将依托主流成熟公链网络的基础设施及跨链技术，开展资产代币的铸造与交易管理工作。该选择将助力 ArtStar 实现快速上线，保障敏感资产数据的安全性与隐私性，并确保交易的透明度。以下为关键技术要素的概述：
+ArtStar 基于主流公链基础设施，采用 ERC-20 标准协议对实物艺术品进行代币化，并构建链上合规管理合约系统。该方案在确保交易透明度的同时，实现了机构级别的资产安全与合规监管。
 
-## 智能合约
+## 代币化架构
 
-ArtStar 将采用智能合约对资产代币的铸造、交易及质押进行管理。智能合约可自动执行资产质押、代币发行及资产转移等核心流程。
+### ERC-20 代币化标准
 
-上述智能合约将由第三方专业安全机构开展严格的测试与审计工作，以确保其安全性与无错性。此外，通过采用多重签名合约，可为高价值交易增加额外的安全防护层级。
+ArtStar 采用 [ERC-20](https://ethereum.org/zh/developers/docs/standards/tokens/erc-20/) 标准作为资产代币化的基础协议。
 
-{/*
+| 参数 | 配置值 | 说明 |
+|------|--------|------|
+| **Decimals** | 18 | 最高精度，确保资产分割的灵活性 |
+| **Symbol** | ARTS / 资产特定符号 | 便于市场识别与交易所上架 |
+| **Total Supply** | 与实物资产价值锚定 | 通过合规管理合约动态调控 |
+| **增发机制** | 受限 | 仅合规管理合约可执行，受多签治理保护 |
 
-## 区块链基础设施建设
+### 代币化流程
 
-ARTChain 主链平台将搭建 Layer-1 基础设施，开放 Layer-2 技术生态应用。网络中的验证者将根据他们在平台原生代币 ArtStar TOKEN 中的持有量和贡献来选择，激励参与者诚实行事。
+```
+实物资产估值 → 法律结构设计 → 智能合约部署 → KYC/AML 验证 → 代币发行
+```
 
-- **ARTChain 主链 Layer-1 网络设施**
-  - 节点运营商网络：保障安全并验证网络
-  - 区块生产者网络
-  - 区块链本身及交易数据历史记录
-  - 网络的共识机制
+1. **资产准备**：对实物艺术品进行专业估值，设计法律结构（SPV 或直接代币化）
+2. **托管安排**：由合格托管人保管实物资产，确保资产被安全冻结
+3. **合约部署**：部署符合 ArtStar 合规标准的代币合约到 BNB Chain (BSC)
+4. **身份验证**：投资者完成 KYC/AML 流程，地址进入白名单
+5. **代币分发**：合规验证通过后，代币安全分发至投资者钱包
 
-- **ARTChain 主链 Layer-2 网络设施**
-  - 主要目标：解决区块链"不可能三角问题"，在不牺牲去中心化与安全性的前提下提高交易吞吐量（TPS）
-  - 避免主链拥堵导致的高额手续费，防止用户被"挤出"
-  - 通过在 Layer-1 之外处理交易来降低费用
-  - 支持多场景生态应用接入
+## 合规管理合约系统
 
-- **ARTChain 主链稳定币网络基础设施建设**
-  - 通过对 Layer-1、Layer-2 网络层的升级与结构化协调，支撑稳定币网络构建
-*/}
+### ComplianceManage 合约架构
 
-## 加密安全性
+ArtStar 构建了一套完整的链上合规管理合约系统，通过签名验证实现机构级别的合规控制：
 
-区块链技术具备高度安全的防护特性，可全方位保障用户数据与交易详情的安全性。在数据传输的全流程中，加密技术持续生效，能够显著降低信息泄露风险。
+```solidity
+// 核心合规管理接口
+interface IComplianceManage {
+    // 管理员操作
+    function setAssetController(address controller) external;
+    function pause() external;
+    function unpause() external;
 
-资产可通过 ERC-20 标准实现代币化，该过程确保实物资产对应的代币具有唯一性（无重复）及可验证性。用户可在任何时间对代币的真实性与有效性进行核查，这为资产代币化的流转管理奠定了坚实基础，确保资产在代币化流转过程中的安全性与可靠性。
+    // 合规操作
+    function addToWhitelist(address account) external returns (bool);
+    function removeFromWhitelist(address account) external returns (bool);
+    function batchUpdateWhitelist(address[] calldata accounts, bool status) external returns (bool);
 
-## 资产的去中心化监管
+    // 签名验证
+    function verifyComplianceSignature(bytes32 messageHash, bytes calldata signature) external view returns (bool);
+    function verifyTransferCompliance(address from, address to, uint256 amount) external view returns (bool);
 
-为切实保障实物文物艺术品的完整性与安全性，ArtStar 社区将积极聘请具有国际影响力的独立专业人士。该等专业人士将对香港相关有限公司提供的实物资产进行定期独立监管审查。审查完成后，审查结果将及时向公众披露，以确保监管审查过程的透明度与公正性，以便各方及时掌握实物资产的真实状况。
+    // 查询接口
+    function isWhitelisted(address account) external view returns (bool);
+    function getComplianceStatus(address account) external view returns (ComplianceStatus);
+}
+```
+
+### 链上签名验证机制
+
+合规管理合约采用 ECDSA 签名验证技术，确保只有经过授权的操作才能执行：
+
+```solidity
+// 签名验证核心逻辑
+function verifyComplianceSignature(
+    bytes32 messageHash,
+    bytes calldata signature
+) public view override returns (bool) {
+    // 1. 验证签名是否来自合规管理员
+    address signer = ECDSA.recover(
+        ECDSA.toEthSignedMessageHash(messageHash),
+        signature
+    );
+    require(isComplianceAdmin[signer], "Invalid compliance signer");
+
+    // 2. 验证签名有效期
+    require(!isSignatureUsed[signature], "Signature already used");
+    require(
+        block.timestamp <= signatureExpiry,
+        "Signature expired"
+    );
+
+    return true;
+}
+```
+
+### 白名单管理机制
+
+| 功能 | 描述 | 权限要求 |
+|------|------|----------|
+| **地址注册** | 将通过 KYC 的投资者地址加入白名单 | 合规管理员 |
+| **批量更新** | 支持批量添加/移除白名单地址 | 合规管理员 + 多签 |
+| **状态查询** | 实时查询地址合规状态 | 公开接口 |
+| **自动检查** | 转账时自动验证双方合规状态 | 合约内联 |
+
+### 合规参数配置
+
+| 参数 | 配置项 | 说明 |
+|------|--------|------|
+| **投资限额** | Min/Max Investment | 单笔投资的 USD 限额 |
+| **募集限额** | Min/Max Raise | 发行轮次的募集目标范围 |
+| **锁定期** | Lock Duration | 投资后代币到账的锁定期 |
+| **转让限制** | Transfer Restrictions | 仅白名单地址间可转让 |
+
+## 区块链基础设施
+
+### BNB Chain 多链架构
+
+ArtStar 选择 BNB Chain 作为主要部署网络，利用其成熟的基础设施：
+
+| 链名称 | 定位 | 特点 |
+|--------|------|------|
+| **BSC (BNB Smart Chain)** | 主网 | 可扩展性、低成本、安全可靠 |
+| **opBNB** | 扩展层 | 更高 TPS、更低 Gas，适用于高频交易场景 |
+
+### 链选型考量
+
+| 考量因素 | BSC 优势 | L2 方案 |
+|----------|----------|---------|
+| **Gas 费用** | 极低（约 $0.05/笔） | 进一步降低 10-100 倍 |
+| **交易速度** | ~3 秒出块 | 秒级确认 |
+| **生态系统** | 成熟、工具丰富 | 快速发展中 |
+| **适用场景** | 标准交易、质押 | 高频交易、小额资产 |
+
+## 安全架构
+
+### 多层安全防护
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                        安全架构                              │
+├────────────────────────────────────────────────────────────┤
+│  第1层：智能合约安全                                          │
+│    - 专业安全审计（第三方独立审计机构）                          │
+│    - 形式化验证（Formal Verification）                       │
+│    - 漏洞奖励计划（Bug Bounty）                              │
+│                                                            │
+│  第2层：权限控制                                             │
+│    - 多签名钱包（Multi-sig）保护高价值操作                      │
+│    - 时间锁（Timelock）延迟敏感操作                           │
+│    - 角色权限分级（Roles-based Access Control）              │
+│                                                            │
+│  第3层：合规验证                                             │
+│    - KYC/AML 身份验证                                        │
+│    - 链上签名验证                                             │
+│    - 白名单机制                                               │
+│                                                            │
+│  第4层：资产托管                                             │
+│    - 实物资产：合格托管人/受托人                               │
+│    - 数字资产：MPC + HSM 冷存储                              │
+└────────────────────────────────────────────────────────────┘
+```
+
+### 智能合约审计
+
+ArtStar 智能合约必须经过以下安全审计流程：
+
+1. **内部代码审查**：开发团队进行多轮代码审计
+2. **第三方安全审计**：聘请专业区块链安全公司（如 Trail of Bits、Certik、OpenZeppelin）
+3. **形式化验证**：对关键逻辑进行数学证明验证
+4. **测试网验证**：在测试网环境充分验证后部署主网
+5. **漏洞奖励计划**：上线后持续开放 Bug Bounty
+
+### 多签名治理
+
+| 操作类型 | 签名要求 | 说明 |
+|----------|----------|------|
+| **参数调整** | 2/3 多签 | 投资限额、锁定期等参数修改 |
+| **白名单管理** | 管理员单签 + 记录 | 日常运营操作 |
+| **资产迁移** | 3/5 多签 | 高风险操作需多方确认 |
+| **合约升级** | 时间锁 + 多签 | 预留 48 小时延迟窗口 |
+
+## 资产托管体系
+
+### 实物资产托管
+
+| 托管要素 | 说明 |
+|----------|------|
+| **托管人资质** | 持牌专业托管机构 |
+| **物理安全** | 专业金库、防火防水、安全监控 |
+| **保险保障** | 足额财产保险覆盖 |
+| **定期审计** | 第三方定期核查实物资产存在性 |
+
+### 数字资产托管
+
+| 托管方式 | 技术实现 | 适用场景 |
+|----------|----------|----------|
+| **MPC 钱包** | 多方计算分割私钥 | 机构级资产管理 |
+| **硬件安全模块 (HSM)** | 物理安全芯片 | 高安全级别存储 |
+| **多签钱包** | 多方共同管理 | 大额资产操作 |
+
+## 合规监管框架
+
+### 国际合规标准
+
+ArtStar 遵循以下国际合规标准：
+
+| 合规领域 | 标准/法规 | 实现方式 |
+|----------|-----------|----------|
+| **KYC** | FATF 建议 | 身份验证 + 地址白名单 |
+| **AML** | 金融行动特别工作组 | 交易监控 + 可疑报告 |
+| **证券合规** | 香港 SFO / 相关司法管辖区 | ERC-3643 兼容设计 |
+| **数据保护** | GDPR / PDPO | 链上最小化 + 加密存储 |
+
+### 独立监管审查
+
+> ArtStar 社区将聘请具有国际影响力的独立专业人士，对实物资产进行定期独立监管审查。审查结果将及时向公众披露。
+
+- **审查频率**：季度/年度独立审计
+- **审查内容**：实物资产存在性、完整性、托管合规
+- **信息披露**：透明公开审查报告
+
+## 合规代币标准演进
+
+ArtStar 代币化方案兼容以下代币标准演进路径：
+
+| 标准 | 类型 | 适用场景 | 合规能力 |
+|------|------|----------|----------|
+| **ERC-20** | 同质化代币 | 当前方案，艺术品份额化 | 基础合规（白名单） |
+| **ERC-3643** | 许可型代币 | 高合规要求场景 | 内置 KYC/AML、投资者资格控制 |
+| **ERC-1400** | 证券型代币 | 机构级证券代币 | 分区转账、法律文件附加 |
+
+> **标准演进策略**：ArtStar 采用模块化设计，可根据监管要求逐步升级代币标准，从 ERC-20 向 ERC-3643/ERC-1400 平滑过渡。
+
+## 技术栈概览
+
+| 技术组件 | 技术选型 | 说明 |
+|----------|----------|------|
+| **智能合约** | Solidity + Hardhat | 主流通用开发框架 |
+| **前端** | Vite + React + TypeScript | 现代 Web3 应用开发 |
+| **Web3 库** | wagmi + viem | 符合ethers.js v6 最佳实践 |
+| **测试框架** | Hardhat + Vitest | 合约与组件全面测试 |
+| **Chain ID** | BSC Mainnet: 56 / Testnet: 97 | 适配 BSC 网络 |
+| **身份验证** | Supabase Auth | Web2 体验的 Web3 身份方案 |
+
+---
+
+## 参考资料
+
+- [BNB Chain RWA Tokenization Guide](https://docs.bnbchain.org/showcase/tokenization/rwa-tokenization/)
+- [RWA Tokenization: Standards and Costs](https://www.rwa.io/post/ethereum-rwa-tokenization-standards-and-costs)
+- [ERC-20 Standard](https://ethereum.org/zh/developers/docs/standards/tokens/erc-20/)
+- [ERC-3643 (T-REX)](https://github.com/ethereum token/T-REX)
+- [OpenZeppelin Contracts](https://www.openzeppelin.com/contracts/)
