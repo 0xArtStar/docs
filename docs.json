@@ -1,9 +1,4 @@
 {
-  "banner": {
-    "content": "🚀 v0.1.0 已发布：查看 /changelog",
-    "dismissible": false,
-    "type": "info"
-  },
   "$schema": "https://mintlify.com/docs.json",
   "theme": "palm",
   "name": "ArtStar Docs",
@@ -17,6 +12,11 @@
     "languages": [
       {
         "language": "en",
+        "banner": {
+          "content": "🚀 ArtStar Launchpad is now online, invest in Art RWA tokens at: `https://app.artstarex.com`",
+          "dismissible": true,
+          "type": "info"
+        },
         "tabs": [
           {
             "tab": "Documentation",
@@ -102,6 +102,11 @@
       },
       {
         "language": "cn",
+        "banner": {
+          "content": "🚀 ArtStar Lauchpad 已上线，前往投资艺术品 RWA 代币：`https://app.artstarex.com`",
+          "dismissible": true,
+          "type": "info"
+        },
         "tabs": [
           {
             "tab": "文档",
