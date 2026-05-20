@@ -13,7 +13,7 @@
       {
         "language": "en",
         "banner": {
-          "content": "🚀 ArtStar Launchpad is now online, invest in Art RWA tokens at: `https://app.artstarex.com`",
+          "content": "🚀 ArtStar Launchpad is now online, invest in Art RWA tokens at: https://app.artstarex.com",
           "dismissible": true,
           "type": "info"
         },
@@ -103,7 +103,7 @@
       {
         "language": "cn",
         "banner": {
-          "content": "🚀 ArtStar Lauchpad 已上线，前往投资艺术品 RWA 代币：`https://app.artstarex.com`",
+          "content": "🚀 ArtStar Lauchpad 已上线，前往投资艺术品 RWA 代币：https://app.artstarex.com",
           "dismissible": true,
           "type": "info"
         },
