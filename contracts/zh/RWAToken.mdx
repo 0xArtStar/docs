@@ -1,0 +1,271 @@
+---
+title: "RWAToken"
+description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代币合约，具备全面的合规性和一级市场销售控制。它支持使用 USDT 进行一级销售、基于签名的合规检查、购买限制以及有时间限制的销售。"
+---
+
+<Card title="源代码" icon="github" href="../contracts/RWAToken.sol">
+  查看 RWAToken.sol 源码
+</Card>
+
+<Note>
+  **可升级性 (Upgradability)**
+
+  该合约使用 `UUPSUpgradeable` 模式进行升级，并继承了 `ERC20Upgradeable`、`OwnableUpgradeable` 和 `PausableUpgradeable`。
+</Note>
+
+## 方法 (Methods)
+
+<AccordionGroup>
+  <Accordion title="initialize()" icon="rocket">
+    可升级合约的初始化函数，设置代币参数、托管钱包、USDT 参考地址以及合规管理器。
+
+    <CodeGroup>
+    ```solidity initialize
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        address _initialOwner,
+        address _custodyWallet,
+        address _usdt,
+        address _complianceManage
+    ) public;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_name" type="string" required>代币名称</ParamField>
+    <ParamField path="_symbol" type="string" required>代币符号</ParamField>
+    <ParamField path="_initialOwner" type="address" required>初始所有者</ParamField>
+    <ParamField path="_custodyWallet" type="address" required>托管钱包</ParamField>
+    <ParamField path="_usdt" type="address" required>USDT 合约地址</ParamField>
+    <ParamField path="_complianceManage" type="address" required>合规管理器地址</ParamField>
+  </Accordion>
+
+  <Accordion title="configureSale()" icon="gear">
+    配置销售参数，包括代币价格和购买限制。
+
+    <CodeGroup>
+    ```solidity configureSale
+    function configureSale(
+        uint256 _priceUSDT,
+        uint256 _minPurchaseUSDT,
+        uint256 _maxPurchaseUSDT
+    ) external;
+    ```
+    </CodeGroup>
+    
+    <ParamField path="_priceUSDT" type="uint256" required>代币 USDT 价格</ParamField>
+    <ParamField path="_minPurchaseUSDT" type="uint256" required>最小购买 USDT 金额</ParamField>
+    <ParamField path="_maxPurchaseUSDT" type="uint256" required>最大购买 USDT 金额</ParamField>
+  </Accordion>
+
+  <Accordion title="configureSaleTime()" icon="clock">
+    配置销售开始和结束的时间限制，不改变活动状态。
+
+    <CodeGroup>
+    ```solidity configureSaleTime
+    function configureSaleTime(uint256 _startTime, uint256 _endTime) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_startTime" type="uint256" required>开始时间戳</ParamField>
+    <ParamField path="_endTime" type="uint256" required>结束时间戳</ParamField>
+  </Accordion>
+
+  <Accordion title="startSale()" icon="play">
+    激活代币销售。在铸造期间将强制执行销售时间限制。
+
+    <CodeGroup>
+    ```solidity startSale
+    function startSale() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="pauseSale()" icon="pause">
+    暂停正在进行的代币销售。
+
+    <CodeGroup>
+    ```solidity pauseSale
+    function pauseSale() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="setUnlockTime()" icon="lock-open">
+    设置代币可转移的最早时间戳（0 表示已解锁）。
+
+    <CodeGroup>
+    ```solidity setUnlockTime
+    function setUnlockTime(uint256 _unlockTime) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_unlockTime" type="uint256" required>解锁时间戳</ParamField>
+  </Accordion>
+
+  <Accordion title="emergencyUnlock()" icon="triangle-exclamation">
+    紧急解锁机制，立即允许代币转移。
+
+    <CodeGroup>
+    ```solidity emergencyUnlock
+    function emergencyUnlock() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="pause()" icon="circle-pause">
+    紧急功能，用于暂停所有代币转移。
+
+    <CodeGroup>
+    ```solidity pause
+    function pause() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="unpause()" icon="circle-play">
+    取消暂停所有代币转移。
+
+    <CodeGroup>
+    ```solidity unpause
+    function unpause() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="setCustodyWallet()" icon="wallet">
+    更新接收筹集资金的托管钱包地址。
+
+    <CodeGroup>
+    ```solidity setCustodyWallet
+    function setCustodyWallet(address _custodyWallet) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_custodyWallet" type="address" required>新的托管钱包地址</ParamField>
+  </Accordion>
+
+  <Accordion title="recoverUnsoldTokens()" icon="rotate-left">
+    从销售中恢复未售出的代币，并将它们铸造到托管钱包中。
+
+    <CodeGroup>
+    ```solidity recoverUnsoldTokens
+    function recoverUnsoldTokens() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="recoverTokens()" icon="life-ring">
+    恢复意外发送到该合约的任何 ERC20 代币。
+
+    <CodeGroup>
+    ```solidity recoverTokens
+    function recoverTokens(address token) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="token" type="address" required>要恢复的代币合约地址</ParamField>
+  </Accordion>
+
+  <Accordion title="forcedTransfer()" icon="shuffle">
+    出于合规或恢复目的执行强制代币转移。
+
+    <CodeGroup>
+    ```solidity forcedTransfer
+    function forcedTransfer(
+        address from,
+        address to,
+        uint256 amount,
+        string calldata reason
+    ) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="from" type="address" required>发送方地址</ParamField>
+    <ParamField path="to" type="address" required>接收方地址</ParamField>
+    <ParamField path="amount" type="uint256" required>转移数量</ParamField>
+    <ParamField path="reason" type="string" required>转移原因描述</ParamField>
+  </Accordion>
+
+  <Accordion title="updateAssetInfo()" icon="file-invoice">
+    更新底层真实世界资产的法律和估值信息。
+
+    <CodeGroup>
+    ```solidity updateAssetInfo
+    function updateAssetInfo(string memory _metadataURI, uint256 _valuation) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_metadataURI" type="string" required>元数据 URI</ParamField>
+    <ParamField path="_valuation" type="uint256" required>估值</ParamField>
+  </Accordion>
+
+  <Accordion title="mint()" icon="coins">
+    在活跃销售期间使用 USDT 购买代币，并验证用户的合规签名。
+
+    <CodeGroup>
+    ```solidity mint
+    function mint(
+        uint256 amountUSDT,
+        bytes memory signature,
+        uint256 expireTime
+    ) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="amountUSDT" type="uint256" required>支付的 USDT 数量</ParamField>
+    <ParamField path="signature" type="bytes" required>合规签名数据</ParamField>
+    <ParamField path="expireTime" type="uint256" required>签名过期时间</ParamField>
+  </Accordion>
+
+  <Accordion title="burn()" icon="fire">
+    仅所有者可调用的功能，用于出于合规或恢复用途销毁特定地址的代币。
+
+    <CodeGroup>
+    ```solidity burn
+    function burn(address from, uint256 amount) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="from" type="address" required>要销毁代币的地址</ParamField>
+    <ParamField path="amount" type="uint256" required>销毁数量</ParamField>
+  </Accordion>
+
+  <Accordion title="remainingForSale()" icon="calculator">
+    获取可供销售的剩余代币数量。
+
+    <CodeGroup>
+    ```solidity remainingForSale
+    function remainingForSale() external view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ResponseField name="返回值" type="uint256">剩余可销售的代币数量</ResponseField>
+  </Accordion>
+
+  <Accordion title="usdtToTokenAmount()" icon="money-bill-transfer">
+    计算给定 USDT 金额可铸造的代币数量。
+
+    <CodeGroup>
+    ```solidity usdtToTokenAmount
+    function usdtToTokenAmount(uint256 amountUSDT) public view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ParamField path="amountUSDT" type="uint256" required>USDT 数量</ParamField>
+    <ResponseField name="返回值" type="uint256">对应的代币数量</ResponseField>
+  </Accordion>
+
+  <Accordion title="tokenToUSDTAmount()" icon="money-bill-transfer">
+    计算给定代币数量所需的 USDT 金额。
+
+    <CodeGroup>
+    ```solidity tokenToUSDTAmount
+    function tokenToUSDTAmount(uint256 tokenAmount) public view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ParamField path="tokenAmount" type="uint256" required>代币数量</ParamField>
+    <ResponseField name="返回值" type="uint256">所需的 USDT 金额</ResponseField>
+  </Accordion>
+</AccordionGroup>

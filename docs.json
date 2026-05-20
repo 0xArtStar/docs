@@ -67,19 +67,19 @@
             ]
           },
           {
-            "tab": "API reference",
+            "tab": "Contracts",
             "groups": [
               {
-                "group": "API documentation",
-                "pages": ["/api-reference/en/introduction"]
+                "group": "Contracts",
+                "pages": ["/contracts/en/introduction"]
               },
               {
                 "group": "Endpoint examples",
                 "pages": [
-                  "/api-reference/en/endpoint/get",
-                  "/api-reference/en/endpoint/create",
-                  "/api-reference/en/endpoint/delete",
-                  "/api-reference/en/endpoint/webhook"
+                  "/contracts/en/endpoint/get",
+                  "/contracts/en/endpoint/create",
+                  "/contracts/en/endpoint/delete",
+                  "/contracts/en/endpoint/webhook"
                 ]
               }
             ]
@@ -152,19 +152,14 @@
             ]
           },
           {
-            "tab": "API reference",
+            "tab": "合约",
             "groups": [
               {
-                "group": "API documentation",
-                "pages": ["/api-reference/en/introduction"]
-              },
-              {
-                "group": "Endpoint examples",
+                "group": "合约",
                 "pages": [
-                  "/api-reference/zh/endpoint/get",
-                  "/api-reference/zh/endpoint/create",
-                  "/api-reference/zh/endpoint/delete",
-                  "/api-reference/zh/endpoint/webhook"
+                  "/contracts/zh/RWAToken",
+                  "/contracts/zh/ArtStarERC1967Proxy",
+                  "/contracts/zh/ComplianceManage"
                 ]
               }
             ]

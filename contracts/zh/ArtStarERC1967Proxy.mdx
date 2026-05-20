@@ -1,0 +1,29 @@
+---
+title: "ArtStarERC1967Proxy"
+description: "为 Ignition 部署和 UUPS 升级模式封装的 `ERC1967Proxy`。"
+---
+
+<Card title="源代码" icon="github" href="../contracts/proxy/ArtStarERC1967Proxy.sol">
+  查看 ArtStarERC1967Proxy.sol 源码
+</Card>
+
+## 方法 (Methods)
+
+<AccordionGroup>
+  <Accordion title="constructor()" icon="cube">
+    使用初始逻辑合约实现和设置数据初始化可升级代理。
+
+    <CodeGroup>
+    ```solidity constructor
+    constructor(address implementation, bytes memory data);
+    ```
+    </CodeGroup>
+
+    <ParamField path="implementation" type="address" required>
+      初始逻辑合约实现地址
+    </ParamField>
+    <ParamField path="data" type="bytes" required>
+      初始化设置数据
+    </ParamField>
+  </Accordion>
+</AccordionGroup>
