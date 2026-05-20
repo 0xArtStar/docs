@@ -65,6 +65,24 @@
                 "pages": ["/guides/en/using-tutorial"]
               }
             ]
+          },
+          {
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "API documentation",
+                "pages": ["/api-reference/en/introduction"]
+              },
+              {
+                "group": "Endpoint examples",
+                "pages": [
+                  "/api-reference/en/endpoint/get",
+                  "/api-reference/en/endpoint/create",
+                  "/api-reference/en/endpoint/delete",
+                  "/api-reference/en/endpoint/webhook"
+                ]
+              }
+            ]
           }
         ],
         "global": {
@@ -127,6 +145,24 @@
               {
                 "group": "快速上手",
                 "pages": ["/guides/zh/使用教程"]
+              }
+            ]
+          },
+          {
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "API documentation",
+                "pages": ["/api-reference/en/introduction"]
+              },
+              {
+                "group": "Endpoint examples",
+                "pages": [
+                  "/api-reference/zh/endpoint/get",
+                  "/api-reference/zh/endpoint/create",
+                  "/api-reference/zh/endpoint/delete",
+                  "/api-reference/zh/endpoint/webhook"
+                ]
               }
             ]
           }
