@@ -144,7 +144,10 @@
             "groups": [
               {
                 "group": "快速上手",
-                "pages": ["/guides/zh/使用教程"]
+                "pages": [
+                  "/guides/zh/使用教程",
+                  "/guides/zh/使用教程（副本）"
+                ]
               }
             ]
           },
