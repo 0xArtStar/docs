@@ -1,0 +1,162 @@
+---
+title: "ComplianceManage"
+description: "ComplianceManage 是 ArtStar 合规体系的独立控制模块，负责把名单管理、签名授权、调用方校验和子管理员权限拆分成一个单独的可升级合约。"
+---
+
+<Card title="Source code" icon="github" href="../contracts/ComplianceManage.sol">
+  查看 ComplianceManage 合约源码
+</Card>
+
+<AccordionGroup>
+<Accordion title="1. 文档概述" icon="file-lines">
+`ComplianceManage` 不负责铸造代币，也不维护资产销售状态。它供 `RWAToken` 等业务合约调用，核心价值在于把“是否允许某个用户执行某种操作”的判断从代币业务层抽离出来，形成可单独治理和升级的合规服务层。
+</Accordion>
+
+<Accordion title="2. 合约职责与合规模型" icon="scale-balanced">
+当前合规模型不是纯白名单模式，而是三个机制的组合：
+
+- **黑名单**：被列入黑名单的地址会在代币转账路径中被直接拒绝。
+- **签名授权**：用户在执行一级销售等敏感操作前，需要持有有效签名。
+- **已验证 Token 调用限制**：只有被批准的业务合约才能消费这些签名授权结果。
+
+<Note>
+`ComplianceManage` 不是通用 KYC 注册表，也不是完整的身份系统。它的定位是一个面向特定业务合约的链上合规控制器。
+</Note>
+</Accordion>
+
+<Accordion title="3. 标准、EIP 与密码学组件说明" icon="key">
+<Tabs>
+  <Tab title="ECDSA">
+    `ECDSA` 是以太坊最常见的签名恢复机制。当前实现通过 `ECDSA.recover()` 从消息摘要和签名中恢复出签名地址，再判断该地址是否为 owner 或签名管理员。
+  </Tab>
+  <Tab title="EIP-191 风格签名">
+    本项目不是 `EIP-712` Typed Data 签名，而是 `EIP-191` 风格的“Ethereum Signed Message”签名流程：
+    1. 用 `keccak256(abi.encodePacked(...))` 生成原始消息摘要。
+    2. 通过 `MessageHashUtils.toEthSignedMessageHash()` 添加以太坊签名前缀。
+    3. 使用 `ECDSA.recover()` 恢复签名者地址。
+  </Tab>
+  <Tab title="消息体绑定字段">
+    用于签名校验的消息体拼接了以下字段以防止重放：
+    - `block.chainid` (防跨链重放)
+    - `address(this)` (防跨合约重放)
+    - `user` (绑定用户)
+    - `txNonce[user]` (确保不可重复消费)
+    - `operation` (区分业务动作)
+    - `expireTime` (限制有效期)
+  </Tab>
+</Tabs>
+
+关于架构组件：
+- **ERC-1967 与 UUPS**：通过 `UUPSUpgradeable` 运行在 `ERC-1967` 代理之上。升级授权由 `_authorizeUpgrade()` 决定。
+- **Initializable 与 OwnableUpgradeable**：由于是可升级实例，初始化必须通过 `initialize()` 完成。`OwnableUpgradeable` 提供最高治理权限。
+</Accordion>
+
+<Accordion title="4. 权限模型与角色边界" icon="users">
+合约定义了三类主要角色：
+
+<Columns>
+  <Column>
+    **owner**
+    最高权限持有者，可设置或撤销子管理员，并控制升级。
+  </Column>
+  <Column>
+    **名单管理员**
+    `PERMISSION_LIST_MANAGER`，负责黑名单管理。
+  </Column>
+  <Column>
+    **签名管理员**
+    `PERMISSION_SIGNATURE_MANAGER`，负责签名授权相关操作，以及批准哪些 Token 合约可以调用签名校验。
+  </Column>
+</Columns>
+
+<Tip>
+这种权限拆分的意义在于降低单个热钱包失误时的影响范围。名单管理者不需要拥有升级权限，签名管理者也不需要拥有全部治理能力。
+</Tip>
+</Accordion>
+
+<Accordion title="5. 黑名单管理机制" icon="ban">
+黑名单通过 `mapping(address => bool) public blacklist` 保存。业务合约可以直接读取该映射，也可以通过 `isBlacklisted()` 做只读查询。
+
+当前提供两种更新方式：
+1. `setBlacklist(address[] calldata users, bool status)`：批量更新，单次最多 100 个地址。
+2. `setBlacklistSingle(address user, bool status)`：单地址更新。
+
+**设计要点：**
+- 批量接口限制最大长度，避免过大数组造成异常高 gas 消耗。
+- 只有状态真正发生变化时才写入并触发事件。
+- 零地址在单地址接口中会被拒绝，批量接口则会跳过零地址。
+</Accordion>
+
+<Accordion title="6. 签名验证流程与防重放设计" icon="signature">
+`verifySignature()` 是关键业务入口，附带 `onlyVerifiedToken` 修饰器。典型流程如下：
+
+<Steps>
+  <Step title="参数传入">
+    业务合约传入 `user`、`signature`、`operation` 和 `expireTime`。
+  </Step>
+  <Step title="时间校验">
+    合约先检查当前时间是否已超过 `expireTime`。
+  </Step>
+  <Step title="生成摘要">
+    用 `chainId`、合约地址、用户、当前 nonce、操作类型和过期时间生成消息摘要。
+  </Step>
+  <Step title="恢复签名">
+    转换为 `EIP-191` 签名消息后，恢复签名地址并判断其是否为 owner 或签名管理员。
+  </Step>
+  <Step title="消费授权">
+    若校验通过，递增 `txNonce[user]`，消费当前授权。
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="7. 已验证 Token 白名单机制" icon="check-double">
+`verifiedTokens` 映射用于限制哪些业务合约可以调用 `verifySignature()`。
+
+- `RWAToken` 在部署后会被注册为已验证 Token。
+- 未注册地址调用会直接触发 `TokenNotVerified()`。
+- 是否允许某个业务合约消费签名，是一个单独的治理决策。
+
+这是“合规服务层”和“业务合约层”解耦的重要接口边界。
+</Accordion>
+
+<Accordion title="8. 子管理员配置模型" icon="user-gear">
+子管理员配置由 `mapping(address => SubAdmin) public subAdmins` 保存：
+
+```solidity
+struct SubAdmin {
+    address wallet;
+    uint256 permissionLevel;
+    uint256 authorizedAt;
+}
+```
+
+采用单一权限等级字段，而不是复杂的多布尔位授权表。更适合当前权限简单、职责清晰的场景。
+</Accordion>
+
+<Accordion title="9. 升级机制与存储兼容性" icon="arrow-up-right-dots">
+升级授权函数：
+
+```solidity
+function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+```
+
+- 代理壳合约本身不决定能否升级，最终由 owner 控制。
+- 新实现必须保持当前存储布局兼容。`uint256[50] private __gap;` 用于为未来新增变量预留空间，不是任意重排变量的许可证。
+</Accordion>
+
+<Accordion title="10. 安全性分析与审计关注点" icon="shield-halved">
+审计时应重点关注：
+- 签名路径是否与链下签名服务完全一致，尤其是 `operation` 与 nonce 的编码顺序。
+- `verifiedTokens` 是否只包含被信任的业务合约。
+- 签名管理员与名单管理员的操作权限是否与运维流程一致。
+- owner 是否通过安全的多签或治理流程控制升级与管理员设置。
+- 升级后版本是否保持签名消息格式和 nonce 语义兼容。
+</Accordion>
+
+<Accordion title="11. 与 RWAToken 的交互关系" icon="handshake">
+`RWAToken` 是 `ComplianceManage` 的主要调用方之一：
+
+- **转账联动**：`RWAToken._update()` 直接查询 `blacklist` 映射，对黑名单地址的普通转账进行拒绝。
+- **认购联动**：`RWAToken.mint()` 调用 `verifySignature()`，要求买家先通过签名授权，随后才能完成 `USDT` 支付和代币铸造。
+</Accordion>
+</AccordionGroup>

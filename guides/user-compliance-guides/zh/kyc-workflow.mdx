@@ -1,0 +1,80 @@
+---
+title: "KYC 认证流转说明 (KYC Workflow)"
+description: "ArtStar 平台准入体系解析：KYC 状态定义、异步流转过程与购买权限控制"
+---
+
+## 概述
+
+ArtStar 面向艺术品 RWA 场景，因此用户不能在完全无门槛的情况下直接进入所有资产流程。KYC 是平台准入体系的重要组成部分，用于连接链下身份要求和链上交互能力
+
+从产品角度看，KYC 不是单独的一页表单，而是一条会影响用户是否可以继续购买、是否具备资格以及是否能进入某些流程的状态主线
+
+## KYC 的核心目标
+
+<AccordionGroup>
+  <Accordion title="为什么需要 KYC？" icon="shield-check">
+    平台引入 KYC，主要是为了满足以下目标：
+    * 满足艺术品 RWA 的合规要求
+    * 为白名单和准入控制提供依据
+    * 避免不符合资格的用户进入购买流程
+    * 将链下审核结果稳定映射到链上交互前置条件中
+  </Accordion>
+  <Accordion title="KYC 与购买权限的关系" icon="lock">
+    KYC 会直接影响用户是否能够继续进入申购流程。通常只有在 KYC 已通过后，用户才可以：
+    * 激活购买入口
+    * 进入 Mint 流程
+    * 满足某些白名单校验条件
+    
+    如果状态是未认证、审核中或被拒绝，前端都应给出清晰的状态解释和下一步引导
+  </Accordion>
+</AccordionGroup>
+
+## KYC 状态与流转过程
+
+<Card title="KYC 状态定义" icon="traffic-light">
+  这些状态不是单纯的展示标签，而是直接影响产品行为的门禁信号：
+  * `unverified`：未认证
+  * `pending`：审核中
+  * `approved`：已通过
+  * `rejected`：已拒绝
+</Card>
+
+一条典型的异步状态机流转链路如下：
+
+<Steps>
+  <Step title="发起认证">用户在前端发起 KYC 流程</Step>
+  <Step title="平台初始化">平台初始化第三方 KYC 验证流程</Step>
+  <Step title="资料提交">用户提交证件和相关资料</Step>
+  <Step title="第三方审核">第三方服务进行资料审核与验证</Step>
+  <Step title="状态同步">审核结果通过回调 (Webhook) 或轮询同步回平台后端</Step>
+  <Step title="状态更新">后端更新数据库中该用户的 KYC 状态</Step>
+  <Step title="UI 响应">前端根据最新状态刷新可操作能力（如解锁购买按钮）</Step>
+</Steps>
+
+## 常见问题与前端展示
+
+<AccordionGroup>
+  <Accordion title="审核中是否可以先购买？">
+    通常不可以。审核中的状态不应被视为可购买状态，除非业务规则明确允许
+  </Accordion>
+  <Accordion title="刷新页面后状态会丢失吗？">
+    不应该。KYC 状态应以数据库和后端查询结果为准，而不是以前端本地内存为准
+  </Accordion>
+  <Accordion title="审核通过后为什么页面没有立刻更新？">
+    这通常与状态同步方式有关，可能受回调延迟、轮询频率或前端刷新时机影响
+  </Accordion>
+</AccordionGroup>
+
+### 避坑指南
+
+<Callout type="warning" title="不要把 KYC 状态只存前端本地">
+  一旦用户刷新页面、更换设备或重新登录，本地状态就会丢失，因此最终状态必须由后端维护
+</Callout>
+
+<Callout type="danger" title="审核中和未认证不是同一个状态">
+  这两者在产品语义上完全不同。一个是尚未开始，一个是已经提交但待结果，文案和交互不能混用
+</Callout>
+
+<Callout type="info" title="状态变更后要联动购买入口">
+  当 KYC 状态变化时，Mint 按钮、资格提示、页面文案和引导动作都应同步更新，避免状态穿透
+</Callout>

@@ -1,0 +1,80 @@
+---
+title: "KYC Workflow"
+description: "Analysis of ArtStar's platform access system: KYC status definition, asynchronous workflow, and purchasing permission control."
+---
+
+## Overview
+
+ArtStar is designed for art RWA scenarios, so users cannot directly enter all asset processes without any thresholds. KYC is an important part of the platform's access system, used to connect off-chain identity requirements with on-chain interaction capabilities.
+
+From a product perspective, KYC is not a single form page, but a main status line that affects whether users can continue purchasing, whether they have qualifications, and whether they can enter certain processes.
+
+## Core Objectives of KYC
+
+<AccordionGroup>
+  <Accordion title="Why is KYC necessary?" icon="shield-check">
+    The platform introduces KYC mainly to meet the following objectives:
+    * Meet compliance requirements for art RWAs
+    * Provide a basis for whitelists and access control
+    * Prevent unqualified users from entering the purchase process
+    * Stably map off-chain review results to on-chain interaction prerequisites
+  </Accordion>
+  <Accordion title="Relationship between KYC and Purchasing Permissions" icon="lock">
+    KYC directly affects whether users can proceed to the subscription process. Usually, only after KYC is approved can users:
+    * Activate the purchase entrance
+    * Enter the Mint process
+    * Meet certain whitelist verification conditions
+    
+    If the status is unverified, pending, or rejected, the frontend should provide clear status explanations and next-step guidance.
+  </Accordion>
+</AccordionGroup>
+
+## KYC Status and Workflow
+
+<Card title="KYC Status Definition" icon="traffic-light">
+  These statuses are not just display labels, but access signals that directly affect product behavior:
+  * `unverified`: Not verified
+  * `pending`: Under review
+  * `approved`: Approved
+  * `rejected`: Rejected
+</Card>
+
+A typical asynchronous state machine workflow is as follows:
+
+<Steps>
+  <Step title="Initiate Verification">The user initiates the KYC process on the frontend.</Step>
+  <Step title="Platform Initialization">The platform initializes the third-party KYC verification process.</Step>
+  <Step title="Submit Information">The user submits ID and related information.</Step>
+  <Step title="Third-party Review">The third-party service reviews and verifies the information.</Step>
+  <Step title="Status Synchronization">The review result is synchronized back to the platform backend via Webhook or polling.</Step>
+  <Step title="Status Update">The backend updates the user's KYC status in the database.</Step>
+  <Step title="UI Response">The frontend refreshes operational capabilities (e.g., unlocking the purchase button) based on the latest status.</Step>
+</Steps>
+
+## Common Questions and Frontend Display
+
+<AccordionGroup>
+  <Accordion title="Can I purchase while under review?">
+    Usually not. The pending status should not be considered a purchasable state unless business rules explicitly allow it.
+  </Accordion>
+  <Accordion title="Will the status be lost after refreshing the page?">
+    It shouldn't. The KYC status should be based on the database and backend query results, not the frontend's local memory.
+  </Accordion>
+  <Accordion title="Why didn't the page update immediately after approval?">
+    This is usually related to the status synchronization method, which may be affected by callback delays, polling frequency, or frontend refresh timing.
+  </Accordion>
+</AccordionGroup>
+
+### Pitfall Guide
+
+<Callout type="warning" title="Do not store KYC status only locally on the frontend">
+  Once the user refreshes the page, changes devices, or logs in again, the local status will be lost, so the final status must be maintained by the backend.
+</Callout>
+
+<Callout type="danger" title="Pending and Unverified are not the same status">
+  These two are completely different in product semantics. One has not started, while the other has been submitted but is awaiting results. Copywriting and interaction must not be mixed.
+</Callout>
+
+<Callout type="info" title="Link the purchase entrance after status changes">
+  When the KYC status changes, the Mint button, qualification prompts, page copy, and guiding actions should be updated synchronously to prevent status penetration.
+</Callout>

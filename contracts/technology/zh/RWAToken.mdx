@@ -1,0 +1,156 @@
+---
+title: "RWAToken"
+description: "RWAToken 是 ArtStar RWA 发行体系中的核心资产合约，负责管理一级销售、合规校验、黑名单限制、锁仓转让、资产信息披露和升级能力。"
+---
+
+<Card title="Source code" icon="github" href="../contracts/RWAToken.sol">
+  查看 RWAToken 合约源码
+</Card>
+
+<AccordionGroup>
+<Accordion title="1. 文档概述" icon="file-lines">
+`RWAToken` 不是一个只负责记账的普通 `ERC-20`。从系统角色上看，它负责两件事情：
+
+- 作为 RWA 份额的链上代币载体，记录余额、转账和销毁。
+- 作为一级销售入口，在销售窗口内接收 `USDT` 并按规则铸造代币给买方。
+</Accordion>
+
+<Accordion title="2. 合约职责与业务目标" icon="bullseye">
+本合约的业务目标是面向受控发行的 RWA 场景。设计重点是“可发行、可限制、可恢复、可升级”。
+
+核心职责包括：
+- 在初始化时完成代币参数、托管钱包、`USDT` 地址和合规模块地址的绑定。
+- 按固定总上限管理代币供给，部署时把保留份额直接铸造给 `custodyWallet`。
+- 通过 `mint()` 承接一级销售，买家在支付 `USDT` 之前需通过外部合规签名校验。
+- 在转账路径上联动 `ComplianceManage`，对黑名单地址进行限制。
+- 为运营与合规处理预留强制转账、回收代币和更新时间锁等管理能力。
+</Accordion>
+
+<Accordion title="3. 架构定位与外部依赖" icon="network-wired">
+`RWAToken` 依赖以下外部组件：
+
+- **`USDT`**：一级销售的支付资产。
+- **`ComplianceManage`**：外部合规服务合约，负责黑名单、签名校验等。
+- **`ArtStarERC1967Proxy`**：部署时承载代理状态的外层代理合约。
+
+Hardhat Ignition 会先部署实现合约，再通过代理传入编码后的 `initialize()` 数据完成初始化，随后把代理地址注册到 `ComplianceManage` 的 `verifiedTokens` 中。
+</Accordion>
+
+<Accordion title="4. 标准、EIP 与基础组件说明" icon="cube">
+<Tabs>
+  <Tab title="ERC-20 & SafeERC20">
+    保留了标准代币接口，在转账和铸造路径上叠加了更多业务限制。使用 `SafeERC20` 把 `transferFrom` 和 `transfer` 包装为更稳健的调用，降低交互风险。
+  </Tab>
+  <Tab title="ERC-1967 & UUPS">
+    `ERC-1967` 规定了代理合约的存储槽约定。本项目采用 `UUPSUpgradeable` 模式，将升级入口和授权逻辑放在实现合约内部，由 `_authorizeUpgrade()` 决定升级权限。
+  </Tab>
+  <Tab title="治理与暂停">
+    - `Initializable`：防止实现合约被错误初始化。
+    - `OwnableUpgradeable`：提供单管理员模型，治理权高度集中在 owner。
+    - `PausableUpgradeable`：提供紧急暂停能力，影响一级销售和二级流转。
+  </Tab>
+  <Tab title="安全与数学">
+    - `ReentrancyGuardTransient`：为 `mint()` 提供额外的重入保护。
+    - `Math.mulDiv`：在 `USDT` 金额与 18 位精度代币数量之间做精确换算。
+    - `__gap`：预留存储位以备未来版本新增状态变量，减少存储结构破坏风险。
+  </Tab>
+</Tabs>
+</Accordion>
+
+<Accordion title="5. 状态变量与核心不变量" icon="database">
+本合约围绕三个核心不变量组织状态：
+- `TOTAL_SUPPLY_CAP = 10,000,000 * 1e18`
+- `RESERVED_AMOUNT = 2,000,000 * 1e18`
+- `SALE_CAP = TOTAL_SUPPLY_CAP - RESERVED_AMOUNT`
+
+200 万枚在初始化时直接铸造给 `custodyWallet`，剩余 800 万枚作为一级销售可出售上限。
+
+其他关键状态：
+- `sold`：已售出的一级销售代币总量。
+- `priceUSDT` / `minPurchaseUSDT` / `maxPurchaseUSDT`：销售定价和认购范围。
+- `saleActive` / `saleStartTime` / `saleEndTime`：销售开关与时间窗。
+- `unlockTime`：转账解锁时间，`0` 表示不锁定。
+- `assetInfo`：底层资产元数据 URI、估值和最近估值更新时间。
+</Accordion>
+
+<Accordion title="6. 初始化与部署方式" icon="play">
+`initialize()` 需要传入代币名称符号、初始 owner、`custodyWallet`、`USDT` 地址和 `ComplianceManage` 地址。
+
+流程包括：
+1. 调用内部的 `init` 函数。
+2. 校验外部依赖地址不为零地址并保存引用。
+3. 把 `RESERVED_AMOUNT` 直接铸造到 `custodyWallet`。
+
+链上真正对外暴露的入口是代理地址。
+</Accordion>
+
+<Accordion title="7. 一级销售流程" icon="cart-shopping">
+一级销售典型认购流程如下：
+
+<Steps>
+  <Step title="运营配置">
+    owner 设置价格、认购额限制，设置时间窗并调用 `startSale()`。
+  </Step>
+  <Step title="买家认购">
+    买家提交 `amountUSDT`、签名和过期时间。
+  </Step>
+  <Step title="合规校验">
+    合约校验时间窗、单笔限额和硬顶，并通过 `ComplianceManage` 验证买家授权。
+  </Step>
+  <Step title="支付与铸造">
+    校验通过后，从买家账户把 `USDT` 转入 `custodyWallet`。合约更新状态，向买家铸造代币。
+  </Step>
+</Steps>
+
+<Note>
+`RWAToken` 把合规授权外包给 `ComplianceManage`，代币逻辑和合规逻辑分层，但一级销售的可用性依赖外部合规合约状态。
+</Note>
+</Accordion>
+
+<Accordion title="8. 转账、暂停、锁仓与黑名单约束" icon="lock">
+本合约通过重写 `_update()` 把多个限制统一放到状态变更入口中：
+
+- **暂停约束**：系统暂停时，普通转账和一级销售（`mint`）都会被拒绝。
+- **锁仓约束**：`unlockTime != 0` 且未到解锁时间时，普通转账会被拒绝。
+- **黑名单约束**：发送方或接收方在 `ComplianceManage` 中被标记为黑名单时，普通转账被拒绝。
+</Accordion>
+
+<Accordion title="9. 管理员能力与运营控制面" icon="user-tie">
+owner 拥有显著的运营权限，主要包括：
+- 配置价格和认购上下限、时间窗及销售开关。
+- 设置或紧急清除转账锁定时间。
+- 暂停和恢复整套代币系统。
+- 强制转账 `forcedTransfer()`、销毁 `burn()`、回收资产 `recoverTokens()` 等。
+- 更新底层资产信息 `updateAssetInfo()`。
+
+<Warning>
+这些能力提高了可运营性，但也表明该代币带有明确治理与合规介入入口，并非完全去中心化的自由流通资产。
+</Warning>
+</Accordion>
+
+<Accordion title="10. 资产信息与恢复机制" icon="life-ring">
+`assetInfo` 保存底层资产的 `metadataURI` 和估值信息。估值真实性完全依赖 owner 更新。
+
+恢复类函数体现了对实际运营场景的考虑：
+- `recoverTokens()`：回收误转入的任意 `ERC-20`。
+- `recoverUnsoldTokens()`：销售结束后，将剩余可售额度一次性铸造到托管钱包。
+- `forcedTransfer()`：在合规或纠纷处理场景下强制移动代币。
+</Accordion>
+
+<Accordion title="11. 升级机制与安全性分析" icon="shield">
+<Columns>
+  <Column>
+    **升级注意事项**
+    - 代理地址不变，状态保留在代理中。
+    - 只有 owner 可调用 `_authorizeUpgrade()`。
+    - 新实现必须与旧版本保持存储布局兼容。
+  </Column>
+  <Column>
+    **审计关注点**
+    - 合规依赖：依赖 `ComplianceManage` 的正确配置。
+    - 权限集中：高权限操作需配套安全的密钥管理。
+    - 价格换算：`priceUSDT` 的精度与换算必须严格统一。
+  </Column>
+</Columns>
+</Accordion>
+</AccordionGroup>

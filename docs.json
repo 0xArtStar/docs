@@ -22,38 +22,25 @@
             "tab": "Documentation",
             "groups": [
               {
-                "group": "Introduction",
-                "pages": [
-                  "/introduction/en/preface",
-                  "/introduction/en/development-path"
-                ]
-              },
-              {
-                "group": "Technology",
-                "pages": ["/technical/en/technical-security"]
-              },
-              {
                 "group": "Model",
                 "pages": [
-                  "/model/en/mathematical-reconstruction",
-                  "/model/en/intrinsic-attributes-of-art",
-                  "/model/en/intergenerational-evolution-and-consensus-pricing"
+                  "/docs/model/en/mathematical-reconstruction",
+                  "/docs/model/en/intrinsic-attributes-of-art",
+                  "/docs/model/en/intergenerational-evolution-and-consensus-pricing"
                 ]
               },
               {
                 "group": "Community",
                 "pages": [
-                  "/community/en/community-economic",
-                  "/community/en/Refrral-and-Reward-Program"
+                  "/docs/community/en/community-economic",
+                  "/docs/community/en/Refrral-and-Reward-Program"
                 ]
               },
               {
-                "group": "Legal",
-                "pages": ["/legal/en/legal-regulatory"]
-              },
-              {
                 "group": "Impact",
-                "pages": ["/impact/en/social-impact"]
+                "pages": [
+                  "/docs/impact/en/social-impact"
+                ]
               }
             ]
           },
@@ -62,7 +49,16 @@
             "groups": [
               {
                 "group": "Getting started",
-                "pages": ["/guides/en/using-tutorial"]
+                "pages": [
+                  "/guides/en/using-tutorial"
+                ]
+              },
+              {
+                "group": "User and Compliance",
+                "pages": [
+                  "/guides/user-compliance-guides/en/kyc-workflow",
+                  "/guides/user-compliance-guides/en/wallet-bnb-chain"
+                ]
               }
             ]
           },
@@ -70,12 +66,12 @@
             "tab": "Contracts",
             "groups": [
               {
-                "group": "Contracts",
+                "group": "Contract Methods",
                 "pages": [
-                  "/contracts/en/endpoint/get",
-                  "/contracts/en/endpoint/create",
-                  "/contracts/en/endpoint/delete",
-                  "/contracts/en/endpoint/webhook"
+                  "/contracts/functions/en/endpoint/get",
+                  "/contracts/functions/en/endpoint/create",
+                  "/contracts/functions/en/endpoint/delete",
+                  "/contracts/functions/en/endpoint/webhook"
                 ]
               }
             ]
@@ -108,35 +104,39 @@
             "tab": "文档",
             "groups": [
               {
-                "group": "介绍",
-                "pages": ["/introduction/zh/前言", "/introduction/zh/发展路径"]
-              },
-              {
-                "group": "技术",
-                "pages": ["/technical/zh/技术及安全"]
-              },
-              {
-                "group": "模型",
+                "group": "概览",
                 "pages": [
-                  "/model/zh/非流动性资产的数学重构与价值释放",
-                  "/model/zh/艺术品内在属性-穿越周期的金融底色",
-                  "/model/zh/代际演化与共识定价-文化资本的数学表达"
+                  "/docs/overview/zh/introduction",
+                  "/docs/overview/zh/architecture"
+                ]
+              },
+              {
+                "group": "核心机制",
+                "pages": [
+                  "/docs/core-mechanics/zh/minting-tokenization",
+                  "/docs/core-mechanics/zh/secondary-market"
                 ]
               },
               {
                 "group": "社区",
                 "pages": [
-                  "/community/zh/社区经济",
-                  "/community/zh/积分推荐和返佣奖励方案"
+                  "/docs/community/zh/社区经济",
+                  "/docs/community/zh/积分推荐和返佣奖励方案"
                 ]
               },
               {
-                "group": "法律",
-                "pages": ["/legal/zh/法律与合规"]
+                "group": "模型",
+                "pages": [
+                  "/docs/model/zh/非流动性资产的数学重构与价值释放",
+                  "/docs/model/zh/艺术品内在属性-穿越周期的金融底色",
+                  "/docs/model/zh/代际演化与共识定价-文化资本的数学表达"
+                ]
               },
               {
                 "group": "影响",
-                "pages": ["/impact/zh/社会影响"]
+                "pages": [
+                  "/docs/impact/zh/社会影响"
+                ]
               }
             ]
           },
@@ -149,6 +149,13 @@
                   "/guides/zh/使用教程",
                   "/guides/zh/使用教程（副本）"
                 ]
+              },
+              {
+                "group": "用户与合规",
+                "pages": [
+                  "/guides/user-compliance-guides/zh/kyc-workflow",
+                  "/guides/user-compliance-guides/zh/wallet-bnb-chain"
+                ]
               }
             ]
           },
@@ -156,11 +163,19 @@
             "tab": "合约",
             "groups": [
               {
-                "group": "合约",
+                "group": "合约方法",
                 "pages": [
-                  "/contracts/zh/RWAToken",
-                  "/contracts/zh/ArtStarERC1967Proxy",
-                  "/contracts/zh/ComplianceManage"
+                  "/contracts/functions/zh/RWAToken",
+                  "/contracts/functions/zh/ArtStarERC1967Proxy",
+                  "/contracts/functions/zh/ComplianceManage"
+                ]
+              },
+              {
+                "group": "技术说明",
+                "pages": [
+                  "/contracts/technology/zh/RWAToken",
+                  "/contracts/technology/zh/ArtStarERC1967Proxy",
+                  "/contracts/technology/zh/ComplianceManage"
                 ]
               }
             ]
@@ -196,7 +211,11 @@
     ]
   },
   "contextual": {
-    "options": ["copy", "view", "chatgpt"]
+    "options": [
+      "copy",
+      "view",
+      "chatgpt"
+    ]
   },
   "footer": {
     "socials": {

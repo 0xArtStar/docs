@@ -14,6 +14,9 @@ Mintlify 组件库官方说明：https://www.mintlify.com/docs/components
 4. Banner 配置规则：Banner 不是页面内组件，只能通过 `docs.json` 的 `banner` 字段配置。如果需要 Banner，请只给出 `docs.json` 的 JSON 片段示例，**绝对不要**在页面里写 `<Banner />`。
 5. 元素规范：所有图片必须带 `alt` 属性；外部链接示例请使用 `https://example.com` 占位；代码块必须带有语言和标题（尤其是 `CodeGroup`、`RequestExample` 和 `ResponseExample`，它们需要标题来生成 Tab 标签）。
 6. 语言与结构：内容语言默认使用中文（除非特殊指定），结构必须清晰，适合用户直接复制复用。
+7. 自动同步 docs.json 路由：当你新建、重命名或移动了 MDX 页面后，必须主动同步更新 `docs.json`。Mintlify 侧边栏完全依赖 `docs.json` 的 `navigation` 配置。
+   - 匹配语言：根据文件路径判断（如 `/zh/` 对应 `cn` 语言配置，`/en/` 对应 `en` 语言配置）。
+   - 定位层级：在对应的 `tabs` -> `groups` 中找到合适的类别，将**无后缀的文件路径**（如 `/introduction/zh/新页面`）添加到 `pages` 数组中。
 
 # 【推荐页面结构（按需取用）】
 
@@ -42,4 +45,4 @@ Mintlify 组件库官方说明：https://www.mintlify.com/docs/components
 - 必须包含的组件（可选）：
 - 现有素材（要点/段落/接口信息/代码/图片链接）：
 
-请基于以上规则与输入素材，生成最终的 MDX 代码。
+请基于以上规则与输入素材，生成最终的 MDX 代码。如果涉及新建或移动页面，请一并输出或直接执行 `docs.json` 的更新。

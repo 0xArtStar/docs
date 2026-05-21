@@ -1,0 +1,145 @@
+---
+title: "ArtStarERC1967Proxy"
+description: "ArtStarERC1967Proxy 是 ArtStar 合约体系中的代理壳合约。它本身的源码非常短，只是对 OpenZeppelin ERC1967Proxy 的一次轻量封装，但在整个升级架构里承担着关键角色。"
+---
+
+<Card title="Source code" icon="github" href="../contracts/proxy/ArtStarERC1967Proxy.sol">
+  查看 ArtStarERC1967Proxy 合约源码
+</Card>
+
+<AccordionGroup>
+<Accordion title="1. 文档概述" icon="file-lines">
+真正持有链上状态的不是 `RWAToken` 或 `ComplianceManage` 实现合约，而是这个代理实例。这份文档的重点是解释为什么一个只有构造函数的合约依然是系统架构中不可忽视的一环。
+</Accordion>
+
+<Accordion title="2. 合约职责与存在原因" icon="building">
+`ArtStarERC1967Proxy` 的职责可以概括为两点：
+
+- 作为标准化代理载体，持有可升级合约的状态。
+- 为 Hardhat Ignition 部署流程提供一个稳定、明确、可复用的代理合约入口。
+
+从部署和运行层面看，它决定了以下事实：
+- 用户交互的地址通常是代理地址，而不是实现合约地址。
+- 实现合约可以被替换，而代理地址和代理状态会被保留。
+- 业务合约的初始化并不是在实现合约构造函数中完成，而是在部署代理时通过 `data` 一次性调用。
+</Accordion>
+
+<Accordion title="3. ERC-1967 标准说明" icon="book">
+`ERC-1967` 是代理模式中的一个关键标准，它规定了实现合约地址等关键元数据应该存在哪些固定存储槽位中。标准化这些槽位的价值在于：
+
+- 避免代理内部状态与业务存储槽冲突。
+- 让链上工具、区块浏览器和审计流程更容易识别代理关系。
+- 让升级和部署遵循业界通用约定，而不是项目自定义布局。
+
+在 ArtStar 中，直接复用 OpenZeppelin 的 `ERC1967Proxy` 实现，这些标准化槽位由 OpenZeppelin 负责维护。
+</Accordion>
+
+<Accordion title="4. UUPS 代理模式说明" icon="arrows-rotate">
+本项目采用的是 **UUPS 升级模式**，而不是透明代理模式。
+
+<Tabs>
+  <Tab title="透明代理 (Transparent)">
+    通常把升级管理能力放在代理侧。
+  </Tab>
+  <Tab title="UUPS">
+    把升级入口和升级授权逻辑放在实现合约侧。
+  </Tab>
+</Tabs>
+
+这意味着 `ArtStarERC1967Proxy` 自己并不包含升级授权策略。真正决定“谁可以升级”的是实现合约中的 `_authorizeUpgrade()`：
+- `RWAToken` 通过 `onlyOwner` 控制升级授权。
+- `ComplianceManage` 也通过 `onlyOwner` 控制升级授权。
+
+<Info>
+**理解 UUPS 的关键：**
+- 保存状态的是代理。
+- 决定升级的是当前实现合约中的授权逻辑。
+</Info>
+</Accordion>
+
+<Accordion title="5. 当前代理的最小封装设计" icon="box">
+当前源码如下：
+
+```solidity ArtStarERC1967Proxy.sol
+contract ArtStarERC1967Proxy is ERC1967Proxy {
+  constructor(address implementation, bytes memory data) ERC1967Proxy(implementation, data) {}
+}
+```
+
+这是一种典型的最小封装设计，完全复用 OpenZeppelin 代理行为。
+
+<Columns>
+  <Column>
+    **好处：**
+    - 代理层代码面积极小，审计面更可控。
+    - 升级语义尽量贴近成熟库默认行为。
+    - 部署脚本可以显式引用项目自己的代理合约名称，方便生成稳定 artifact 和部署记录。
+  </Column>
+  <Column>
+    **代价：**
+    - 如果不了解 `ERC-1967` 与 UUPS，容易误以为该合约“没什么重要性”。
+    - 升级风险更多转移到实现合约和运维流程，而不是通过代理层做保护。
+  </Column>
+</Columns>
+</Accordion>
+
+<Accordion title="6. 初始化数据与部署流程" icon="rocket">
+该代理构造函数接收两个参数：
+1. `implementation`：初始实现合约地址。
+2. `data`：部署代理后立即委托执行的初始化 calldata。
+
+这两个参数共同完成了“部署代理 + 初始化业务状态”的过程。这种模式的优点是初始化与代理部署一次完成，避免部署后忘记初始化带来的高危问题。
+</Accordion>
+
+<Accordion title="7. 与 Ignition 部署模块的关系" icon="fire">
+Ignition 模块对该代理的使用非常直接：
+
+- `ComplianceManage`：先部署实现合约，再把 `initialize(deployer)` 编码后作为 `data` 传入代理，映射为 `ComplianceManageProxy`。
+- `RWAToken`：先部署实现合约，再把名称、符号等参数编码为 `initialize(...)` 传入代理，映射为 `RWATokenProxy`。
+
+随后，部署脚本还会继续调用代理实例上的业务函数。这说明代理不只是一个部署期临时对象，而是整个系统运行期的正式入口。
+</Accordion>
+
+<Accordion title="8. 与实现合约的职责边界" icon="shield">
+代理合约与实现合约的职责应严格区分：
+
+- **代理合约**：负责保存状态、接收外部调用并把调用委托给实现合约。
+- **实现合约**：负责定义业务逻辑、权限控制、升级授权和存储布局。
+
+<Warning>
+**边界红线：**
+- 代理不定义销售、合规或黑名单逻辑。
+- 代理不决定谁能升级。
+- `RWAToken` 与 `ComplianceManage` 必须自行保证未来版本存储布局兼容。
+- 运维和审计必须明确区分“代理地址”和“实现地址”。
+</Warning>
+</Accordion>
+
+<Accordion title="9. 升级风险与运维注意事项" icon="triangle-exclamation">
+主要风险体现在以下几个方面：
+
+<Steps>
+  <Step title="存储布局风险">
+    实现合约新增、删除或重排状态变量时，可能破坏代理中已有状态。
+  </Step>
+  <Step title="初始化风险">
+    如果未来版本引入新的初始化路径，必须谨慎使用 reinitializer，避免重复初始化或遗漏初始化。
+  </Step>
+  <Step title="地址识别风险">
+    部署、验证和前后端接入时，必须使用代理地址作为系统入口，而不是误用实现合约地址。
+  </Step>
+  <Step title="权限认知风险">
+    团队若误以为代理合约持有升级治理逻辑，可能漏看实现合约中的 `_authorizeUpgrade()`。
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="10. 为什么该合约代码极短但文档仍然必要" icon="lightbulb">
+它连接了三个高风险主题：
+- 代理存储与业务存储如何共存。
+- 实现合约如何在不改地址的情况下升级。
+- 部署脚本如何一次性完成代理初始化并让业务系统真正可用。
+
+如果没有单独文档，读者容易产生误判。正因如此，即便它只是一层薄封装，仍然值得单独说明。
+</Accordion>
+</AccordionGroup>
