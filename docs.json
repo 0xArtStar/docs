@@ -71,10 +71,6 @@
             "groups": [
               {
                 "group": "Contracts",
-                "pages": ["/contracts/en/introduction"]
-              },
-              {
-                "group": "Endpoint examples",
                 "pages": [
                   "/contracts/en/endpoint/get",
                   "/contracts/en/endpoint/create",

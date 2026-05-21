@@ -322,7 +322,7 @@ Standard: ERC-20
 Restricted Jurisdiction: Mainland China
 KYC/AML Provider: Sumsub
 ````
-
+</CodeGroup>
 ----------
 
 ## 6. Token 基础参数
