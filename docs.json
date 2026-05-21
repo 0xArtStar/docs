@@ -22,24 +22,33 @@
             "tab": "Documentation",
             "groups": [
               {
-                "group": "Model",
+                "group": "Introduction",
                 "pages": [
-                  "/docs/model/en/mathematical-reconstruction",
-                  "/docs/model/en/intrinsic-attributes-of-art",
-                  "/docs/model/en/intergenerational-evolution-and-consensus-pricing"
+                  "/documentation/introduction/en/preface",
+                  "/documentation/introduction/en/development-path"
                 ]
               },
               {
                 "group": "Community",
                 "pages": [
-                  "/docs/community/en/community-economic",
-                  "/docs/community/en/Refrral-and-Reward-Program"
+                  "/documentation/community/en/community-economic",
+                  "/documentation/community/en/Refrral-and-Reward-Program"
                 ]
               },
               {
+                "group": "Legal",
+                "pages": ["/documentation/legal/en/legal-and-compliance"]
+              },
+              {
                 "group": "Impact",
+                "pages": ["/documentation/impact/en/social-impact"]
+              },
+              {
+                "group": "Model",
                 "pages": [
-                  "/docs/impact/en/social-impact"
+                  "/documentation/model/en/mathematical-reconstruction",
+                  "/documentation/model/en/intrinsic-attributes-of-art",
+                  "/documentation/model/en/intergenerational-evolution-and-consensus-pricing"
                 ]
               }
             ]
@@ -49,9 +58,7 @@
             "groups": [
               {
                 "group": "Getting started",
-                "pages": [
-                  "/guides/en/using-tutorial"
-                ]
+                "pages": ["/guides/en/using-tutorial"]
               },
               {
                 "group": "User and Compliance",
@@ -63,15 +70,19 @@
             ]
           },
           {
-            "tab": "Contracts",
+            "tab": "Technical",
             "groups": [
+              {
+                "group": "Technical",
+                "pages": ["/technical/en/technology-and-security"]
+              },
               {
                 "group": "Contract Methods",
                 "pages": [
-                  "/contracts/functions/en/endpoint/get",
-                  "/contracts/functions/en/endpoint/create",
-                  "/contracts/functions/en/endpoint/delete",
-                  "/contracts/functions/en/endpoint/webhook"
+                  "/technical/contracts/functions/en/endpoint/get",
+                  "/technical/contracts/functions/en/endpoint/create",
+                  "/technical/contracts/functions/en/endpoint/delete",
+                  "/technical/contracts/functions/en/endpoint/webhook"
                 ]
               }
             ]
@@ -104,38 +115,47 @@
             "tab": "文档",
             "groups": [
               {
+                "group": "介绍",
+                "pages": [
+                  "/documentation/introduction/zh/前言",
+                  "/documentation/introduction/zh/发展路径"
+                ]
+              },
+              {
                 "group": "概览",
                 "pages": [
-                  "/docs/overview/zh/introduction",
-                  "/docs/overview/zh/architecture"
+                  "/documentation/overview/zh/introduction",
+                  "/documentation/overview/zh/architecture"
                 ]
               },
               {
                 "group": "核心机制",
                 "pages": [
-                  "/docs/core-mechanics/zh/minting-tokenization",
-                  "/docs/core-mechanics/zh/secondary-market"
+                  "/documentation/core-mechanics/zh/minting-tokenization",
+                  "/documentation/core-mechanics/zh/secondary-market"
                 ]
               },
               {
                 "group": "社区",
                 "pages": [
-                  "/docs/community/zh/社区经济",
-                  "/docs/community/zh/积分推荐和返佣奖励方案"
+                  "/documentation/community/zh/社区经济",
+                  "/documentation/community/zh/积分推荐和返佣奖励方案"
                 ]
+              },
+              {
+                "group": "法律",
+                "pages": ["/documentation/legal/zh/法律与合规"]
+              },
+              {
+                "group": "影响",
+                "pages": ["/documentation/impact/zh/社会影响"]
               },
               {
                 "group": "模型",
                 "pages": [
-                  "/docs/model/zh/非流动性资产的数学重构与价值释放",
-                  "/docs/model/zh/艺术品内在属性-穿越周期的金融底色",
-                  "/docs/model/zh/代际演化与共识定价-文化资本的数学表达"
-                ]
-              },
-              {
-                "group": "影响",
-                "pages": [
-                  "/docs/impact/zh/社会影响"
+                  "/documentation/model/zh/非流动性资产的数学重构与价值释放",
+                  "/documentation/model/zh/艺术品内在属性-穿越周期的金融底色",
+                  "/documentation/model/zh/代际演化与共识定价-文化资本的数学表达"
                 ]
               }
             ]
@@ -145,10 +165,7 @@
             "groups": [
               {
                 "group": "快速上手",
-                "pages": [
-                  "/guides/zh/使用教程",
-                  "/guides/zh/使用教程（副本）"
-                ]
+                "pages": ["/guides/zh/使用教程", "/guides/zh/使用教程（副本）"]
               },
               {
                 "group": "用户与合规",
@@ -160,22 +177,26 @@
             ]
           },
           {
-            "tab": "合约",
+            "tab": "技术",
             "groups": [
+              {
+                "group": "技术",
+                "pages": ["/technical/zh/技术及安全"]
+              },
               {
                 "group": "合约方法",
                 "pages": [
-                  "/contracts/functions/zh/RWAToken",
-                  "/contracts/functions/zh/ArtStarERC1967Proxy",
-                  "/contracts/functions/zh/ComplianceManage"
+                  "/technical/contracts/functions/zh/RWAToken",
+                  "/technical/contracts/functions/zh/ArtStarERC1967Proxy",
+                  "/technical/contracts/functions/zh/ComplianceManage"
                 ]
               },
               {
                 "group": "技术说明",
                 "pages": [
-                  "/contracts/technology/zh/RWAToken",
-                  "/contracts/technology/zh/ArtStarERC1967Proxy",
-                  "/contracts/technology/zh/ComplianceManage"
+                  "/technical/contracts/technology/zh/RWAToken",
+                  "/technical/contracts/technology/zh/ArtStarERC1967Proxy",
+                  "/technical/contracts/technology/zh/ComplianceManage"
                 ]
               }
             ]
@@ -211,11 +232,7 @@
     ]
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt"
-    ]
+    "options": ["copy", "chatgpt", "claude"]
   },
   "footer": {
     "socials": {

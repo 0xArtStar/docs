@@ -5,3 +5,4 @@
 .mintlify
 .npm
 .config
+node_modules

@@ -4,7 +4,7 @@
 
 # 参考文档 (Reference)
 
-Mintlify 组件库官方说明：https://www.mintlify.com/docs/components
+Mintlify 组件库官方说明：https://www.mintlify.com/documentation/components
 
 # 【硬性要求】
 

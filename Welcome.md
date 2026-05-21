@@ -1,5 +1,3 @@
-
-
 ## 项目关键信息
 
 <Info>
@@ -327,7 +325,7 @@ KYC/AML Provider: Sumsub
 
 ## 6. Token 基础参数
 
-----------
+---
 
 ## 7. 首批资产 IAO 展示结构
 
@@ -367,6 +365,6 @@ KYC/AML Provider: Sumsub
 </Warning>
 ```
 
-----------
+---
 
 ## 8. 待补充信息清单
