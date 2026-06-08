@@ -4,6 +4,8 @@
   "description": "Use the starter kit to get your docs deployed and ready to customize.",
   "main": "index.js",
   "scripts": {
+    "dev": "mkdir -p .config && HOME=$PWD/.config mint dev",
+    "update": "mkdir -p .config && HOME=$PWD/.config mint update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +20,7 @@
   },
   "homepage": "https://github.com/0xArtStar/docs#readme",
   "devDependencies": {
+    "mint": "^4.0.172",
     "prettier": "^3.8.3"
   }
 }

@@ -37,7 +37,7 @@
               },
               {
                 "group": "Legal",
-                "pages": ["/documentation/legal/en/legal-and-compliance"]
+                "pages": ["/documentation/legal/en/legal-regulatory"]
               },
               {
                 "group": "Impact",
@@ -74,15 +74,15 @@
             "groups": [
               {
                 "group": "Technical",
-                "pages": ["/technical/en/technology-and-security"]
+                "pages": ["/technical/en/technical-security"]
               },
               {
                 "group": "Contract Methods",
                 "pages": [
-                  "/technical/contracts/functions/en/endpoint/get",
-                  "/technical/contracts/functions/en/endpoint/create",
-                  "/technical/contracts/functions/en/endpoint/delete",
-                  "/technical/contracts/functions/en/endpoint/webhook"
+                  "/api-reference/en/endpoint/get",
+                  "/api-reference/en/endpoint/create",
+                  "/api-reference/en/endpoint/delete",
+                  "/api-reference/en/endpoint/webhook"
                 ]
               }
             ]
@@ -124,15 +124,15 @@
               {
                 "group": "概览",
                 "pages": [
-                  "/documentation/overview/zh/introduction",
-                  "/documentation/overview/zh/architecture"
+                  "/documentation/overview/zh/什么是 ArtStar",
+                  "/documentation/overview/zh/ArtStar 平台架构设计"
                 ]
               },
               {
                 "group": "核心机制",
                 "pages": [
-                  "/documentation/core-mechanics/zh/minting-tokenization",
-                  "/documentation/core-mechanics/zh/secondary-market"
+                  "/documentation/core-mechanics/zh/Launchpad 申购与代币化",
+                  "/documentation/core-mechanics/zh/二级市场与流动性池"
                 ]
               },
               {
@@ -165,13 +165,13 @@
             "groups": [
               {
                 "group": "快速上手",
-                "pages": ["/guides/zh/使用教程", "/guides/zh/使用教程（副本）"]
+                "pages": ["/guides/zh/使用教程", "/guides/zh/新手入门指南"]
               },
               {
                 "group": "用户与合规",
                 "pages": [
-                  "/guides/user-compliance-guides/zh/kyc-workflow",
-                  "/guides/user-compliance-guides/zh/wallet-bnb-chain"
+                  "/guides/user-compliance-guides/zh/KYC 认证流转说明",
+                  "/guides/user-compliance-guides/zh/钱包接入与网络切换"
                 ]
               }
             ]
