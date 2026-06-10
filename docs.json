@@ -29,10 +29,24 @@
                 ]
               },
               {
+                "group": "Overview",
+                "pages": [
+                  "/documentation/overview/en/what-is-artstar",
+                  "/documentation/overview/en/artstar-platform-architecture"
+                ]
+              },
+              {
+                "group": "Core Mechanics",
+                "pages": [
+                  "/documentation/core-mechanics/en/launchpad-subscription-and-tokenization",
+                  "/documentation/core-mechanics/en/secondary-market-and-liquidity-pools"
+                ]
+              },
+              {
                 "group": "Community",
                 "pages": [
-                  "/documentation/community/en/community-economic",
-                  "/documentation/community/en/Refrral-and-Reward-Program"
+                  "/documentation/community/en/token-economic",
+                  "/documentation/community/en/referral-and-reward-program"
                 ]
               },
               {
@@ -58,7 +72,7 @@
             "groups": [
               {
                 "group": "Getting started",
-                "pages": ["/guides/en/using-tutorial"]
+                "pages": ["/guides/en/beginner-guide"]
               },
               {
                 "group": "User and Compliance",
@@ -138,7 +152,7 @@
               {
                 "group": "社区",
                 "pages": [
-                  "/documentation/community/zh/社区经济",
+                  "/documentation/community/zh/代币经济",
                   "/documentation/community/zh/积分推荐和返佣奖励方案"
                 ]
               },
@@ -165,7 +179,7 @@
             "groups": [
               {
                 "group": "快速上手",
-                "pages": ["/guides/zh/使用教程", "/guides/zh/新手入门指南"]
+                "pages": ["/guides/zh/新手入门"]
               },
               {
                 "group": "用户与合规",

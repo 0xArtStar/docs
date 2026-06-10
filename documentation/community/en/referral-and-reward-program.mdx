@@ -1,14 +1,14 @@
 ---
-title: "Points Referral and Rebate Reward Program"
-description: "Detailed explanation of ArtStar platform's points referral and rebate reward mechanism"
+title: "Referral and Reward Program"
+description: "Detailed explanation of ArtStar platform's referral and reward mechanism"
 # icon: "chart-line"
 ---
 
-ArtStar platform is dedicated to building a high-quality art trading and investment community. Our core challenge is: how to cost-effectively and precisely attract high-net-worth collectors, excellent artists, and active investors while continuously stimulating user activity and trading enthusiasm on the platform?
+ArtStar platform is dedicated to building a high-quality art trading and investment community. Our core goal is to attract high-net-worth collectors, excellent artists, and active investors in a low-cost and highly targeted way, while continuously stimulating user activity and trading enthusiasm on the platform.
 
-<Info>
+{/* <Info>
 The scheme must seamlessly integrate with Supabase database and prepare for future Web3 identity (wallet address) binding. We start with the simplest, most controllable MVP (Minimum Viable Product) approach.
-</Info>
+</Info> */}
 
 ## Design Philosophy
 
@@ -17,13 +17,13 @@ The scheme must seamlessly integrate with Supabase database and prepare for futu
 We divide users into four main tiers to meet the needs of different groups:
 
 <CardGroup cols={2}>
-  <Card title="S-Tier (Art Giants / Institutional Cornerstones)" icon="crown">
+  <Card title="S-Tier (Art Giants/Institutional Cornerstones)" icon="crown">
     Internationally renowned artists, top galleries, etc., providing quality art assets and brand endorsement for the platform.
   </Card>
-  <Card title="A-Tier (Veteran Collectors / Elite Artists)" icon="gem">
+  <Card title="A-Tier (Elite Artists/Veteran Collectors)" icon="gem">
     High-net-worth individuals, seasoned buyers, the stable trading force of the platform.
   </Card>
-  <Card title="B-Tier (Active Buyers / Trendy Artists)" icon="fire">
+  <Card title="B-Tier (Trendy Artists/Active Buyers)" icon="fire">
     High-frequency trading and interaction participants, growing artists, injecting continuous vitality into the community.
   </Card>
   <Card title="C-Tier/D-Tier (Potential/New Users)" icon="seedling">
@@ -43,8 +43,8 @@ We divide users into four main tiers to meet the needs of different groups:
   <Step title="Verification & Auto Points">
     When a friend completes identity verification (KYC), the system immediately and automatically awards "Referral Points" to the referrer.
   </Step>
-  <Step title="Trading & Commission Rebate">
-    When a friend purchases art on the platform, the referrer not only upgrades their tier but also receives real USDT commission rebate.
+  <Step title="Trading & Commission">
+    When a friend purchases art on the platform, the referrer not only upgrades their tier but also receives real USDT commission.
   </Step>
 </Steps>
 
@@ -56,8 +56,8 @@ Users are divided into five tiers based on "Asset Value Contribution" (points/tr
 | --- | --- | --- | --- |
 | **S-Tier** | Art Giants / Top Collectors | 500,000+ | Industry leaders with extremely high asset value and influence. |
 | **A-Tier** | Elite Artists / Veteran Collectors | 200,000 - 500,000 | Professionals continuously contributing high-quality content or funds. |
-| **B-Tier** | Active Buyers / Trendy Artists | 50,000 - 200,000 | Community backbone, high-frequency trading and interaction. |
-| **C-Tier** | Potential Users / Emerging Artists | 10,000 - 50,000 | Active platform users with purchasing power and influence. |
+| **B-Tier** | Trendy Artists / Active Buyers | 50,000 - 200,000 | Community backbone, high-frequency trading and interaction. |
+| **C-Tier** | Emerging Artists / Potential Users | 10,000 - 50,000 | Active platform users with purchasing power and influence. |
 | **D-Tier** | New Registrants / Observers | 0 - 10,000 | Basic users, newly registered or lightly engaged. |
 
 ## Points System & Earn Mechanism
@@ -90,7 +90,7 @@ The platform adopts the concept of **"Total Points (ArtPoints, AP)"**.
   </Accordion>
 
   <Accordion title="3. Trading Points (Consumption Mining)" icon="cart-shopping">
-    When you purchase art on the platform, the system automatically awards points based on the transaction amount (USD). Higher tiers get larger point multipliers:
+    When you purchase art on the platform, the system automatically awards points based on the transaction amount (USDT). Higher tiers get larger point multipliers:
 
     | User Tier | Conversion Rate (AP / USDT) | Points Cap | Settlement Cycle |
     | --- | --- | --- | --- |
@@ -106,15 +106,15 @@ The platform adopts the concept of **"Total Points (ArtPoints, AP)"**.
   </Accordion>
 </AccordionGroup>
 
-## USDT Rebate Mechanism
+## USDT Commission Mechanism
 
-The platform uses a **permanent rebate mechanism**, one invitation, lifetime binding.
+The platform uses a **permanent commission mechanism**, one invitation, lifetime binding.
 
-### Tiered Rebate Rates
+### Tiered Commission Rates
 
-Based on the referrer's **historical cumulative referred trading volume (total spending by all referred users on the platform)**, a tiered rebate rate is implemented:
+Based on the referrer's **historical cumulative referred trading volume (total spending by all referred users on the platform)**, a tiered commission rate is implemented:
 
-| Cumulative Referred Trading Volume (USDT) | Referrer Business Tier | Rebate Rate | Rebate Cap | Settlement Cycle |
+| Cumulative Referred Trading Volume (USDT) | Referrer Business Tier | Commission Rate | Commission Cap | Settlement Cycle |
 | --- | --- | --- | --- | --- |
 | 0 - 100,000 | Apprentice Referrer | 1.0% | No cap | Upon art sale completion |
 | 100,000 - 500,000 | Junior Referrer | 1.5% | No cap | Upon art sale completion |
@@ -123,7 +123,7 @@ Based on the referrer's **historical cumulative referred trading volume (total s
 | 5,000,000+ | Top Referrer | 3.0% | No cap | Upon art sale completion |
 
 <Note>
-**KOL / Gold Referral Ambassador Special Bonus**: If the referrer is a platform-signed promotion ambassador (KOL) or a "Gold Referral Ambassador" certified by the "Art Committee", they enjoy an additional **+0.5% to +1.0%** exclusive bonus on top of the standard rebate rate!
+**KOL / Gold Referral Ambassador Special Bonus**: If the referrer is a platform-signed promotion ambassador (KOL) or a "Gold Referral Ambassador" certified by the "Art Committee", they enjoy an additional **+0.5% to +1.0%** exclusive bonus on top of the standard commission rate!
 </Note>
 
 ## Business Process & Risk Control Rules
@@ -139,6 +139,6 @@ Based on the referrer's **historical cumulative referred trading volume (total s
     The "Art Committee" can authorize "Gold Referral Ambassadors" whose referred high-net-worth users enjoy fast-track verification.
   </Card>
   <Card title="Anti-Fraud Mechanism" icon="ban">
-    USDT rebate can only be withdrawn/settled after art transactions are fully confirmed and refund period has passed; if malicious order falsification or fake KYC is discovered, the platform reserves the right to freeze points and rebate accounts.
+    USDT commission can only be withdrawn/settled after art transactions are fully confirmed and refund period has passed; if malicious order falsification or fake KYC is discovered, the platform reserves the right to freeze points and commission accounts.
   </Card>
 </CardGroup>
