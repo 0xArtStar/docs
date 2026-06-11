@@ -1,0 +1,271 @@
+---
+title: "RWAToken"
+description: "`RWAToken` is the core real-world asset (RWA) token contract in the ArtStar protocol, with comprehensive compliance controls and primary market sale management. It supports primary sales settled in USDT, signature-based compliance checks, purchase limits, and time-bounded sale windows."
+---
+
+<Card title="Source Code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol">
+  View the RWAToken.sol source code
+</Card>
+
+<Note>
+  **Upgradability**
+
+  This contract uses the `UUPSUpgradeable` pattern and inherits from `ERC20Upgradeable`, `OwnableUpgradeable`, and `PausableUpgradeable`.
+</Note>
+
+## Methods
+
+<AccordionGroup>
+  <Accordion title="initialize()" icon="rocket">
+    Initialization function for the upgradeable contract. It sets token parameters, the custody wallet, the USDT reference contract, and the compliance manager.
+
+    <CodeGroup>
+    ```solidity initialize
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        address _initialOwner,
+        address _custodyWallet,
+        address _usdt,
+        address _complianceManage
+    ) public;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_name" type="string" required>Token name</ParamField>
+    <ParamField path="_symbol" type="string" required>Token symbol</ParamField>
+    <ParamField path="_initialOwner" type="address" required>Initial owner</ParamField>
+    <ParamField path="_custodyWallet" type="address" required>Custody wallet</ParamField>
+    <ParamField path="_usdt" type="address" required>USDT contract address</ParamField>
+    <ParamField path="_complianceManage" type="address" required>Compliance manager address</ParamField>
+  </Accordion>
+
+  <Accordion title="configureSale()" icon="gear">
+    Configures sale parameters, including token price and purchase limits.
+
+    <CodeGroup>
+    ```solidity configureSale
+    function configureSale(
+        uint256 _priceUSDT,
+        uint256 _minPurchaseUSDT,
+        uint256 _maxPurchaseUSDT
+    ) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_priceUSDT" type="uint256" required>Token price in USDT</ParamField>
+    <ParamField path="_minPurchaseUSDT" type="uint256" required>Minimum purchase amount in USDT</ParamField>
+    <ParamField path="_maxPurchaseUSDT" type="uint256" required>Maximum purchase amount in USDT</ParamField>
+  </Accordion>
+
+  <Accordion title="configureSaleTime()" icon="clock">
+    Configures the sale start and end time constraints without changing the sale's active status.
+
+    <CodeGroup>
+    ```solidity configureSaleTime
+    function configureSaleTime(uint256 _startTime, uint256 _endTime) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_startTime" type="uint256" required>Start timestamp</ParamField>
+    <ParamField path="_endTime" type="uint256" required>End timestamp</ParamField>
+  </Accordion>
+
+  <Accordion title="startSale()" icon="play">
+    Activates token sales. Sale time constraints are enforced during minting.
+
+    <CodeGroup>
+    ```solidity startSale
+    function startSale() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="pauseSale()" icon="pause">
+    Pauses an ongoing token sale.
+
+    <CodeGroup>
+    ```solidity pauseSale
+    function pauseSale() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="setUnlockTime()" icon="lock-open">
+    Sets the earliest timestamp at which tokens become transferable (`0` means unlocked).
+
+    <CodeGroup>
+    ```solidity setUnlockTime
+    function setUnlockTime(uint256 _unlockTime) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_unlockTime" type="uint256" required>Unlock timestamp</ParamField>
+  </Accordion>
+
+  <Accordion title="emergencyUnlock()" icon="triangle-exclamation">
+    Emergency unlock mechanism that immediately allows token transfers.
+
+    <CodeGroup>
+    ```solidity emergencyUnlock
+    function emergencyUnlock() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="pause()" icon="circle-pause">
+    Emergency function that pauses all token transfers.
+
+    <CodeGroup>
+    ```solidity pause
+    function pause() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="unpause()" icon="circle-play">
+    Resumes all token transfers.
+
+    <CodeGroup>
+    ```solidity unpause
+    function unpause() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="setCustodyWallet()" icon="wallet">
+    Updates the custody wallet address that receives raised funds.
+
+    <CodeGroup>
+    ```solidity setCustodyWallet
+    function setCustodyWallet(address _custodyWallet) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_custodyWallet" type="address" required>New custody wallet address</ParamField>
+  </Accordion>
+
+  <Accordion title="recoverUnsoldTokens()" icon="rotate-left">
+    Recovers unsold tokens from the sale and mints them to the custody wallet.
+
+    <CodeGroup>
+    ```solidity recoverUnsoldTokens
+    function recoverUnsoldTokens() external;
+    ```
+    </CodeGroup>
+  </Accordion>
+
+  <Accordion title="recoverTokens()" icon="life-ring">
+    Recovers any ERC20 tokens that were accidentally sent to this contract.
+
+    <CodeGroup>
+    ```solidity recoverTokens
+    function recoverTokens(address token) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="token" type="address" required>Token contract address to recover</ParamField>
+  </Accordion>
+
+  <Accordion title="forcedTransfer()" icon="shuffle">
+    Executes a forced token transfer for compliance or recovery purposes.
+
+    <CodeGroup>
+    ```solidity forcedTransfer
+    function forcedTransfer(
+        address from,
+        address to,
+        uint256 amount,
+        string calldata reason
+    ) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="from" type="address" required>Sender address</ParamField>
+    <ParamField path="to" type="address" required>Recipient address</ParamField>
+    <ParamField path="amount" type="uint256" required>Transfer amount</ParamField>
+    <ParamField path="reason" type="string" required>Reason for the transfer</ParamField>
+  </Accordion>
+
+  <Accordion title="updateAssetInfo()" icon="file-invoice">
+    Updates legal and valuation information for the underlying real-world asset.
+
+    <CodeGroup>
+    ```solidity updateAssetInfo
+    function updateAssetInfo(string memory _metadataURI, uint256 _valuation) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="_metadataURI" type="string" required>Metadata URI</ParamField>
+    <ParamField path="_valuation" type="uint256" required>Valuation</ParamField>
+  </Accordion>
+
+  <Accordion title="mint()" icon="coins">
+    Purchases tokens with USDT during an active sale and verifies the user's compliance signature.
+
+    <CodeGroup>
+    ```solidity mint
+    function mint(
+        uint256 amountUSDT,
+        bytes memory signature,
+        uint256 expireTime
+    ) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="amountUSDT" type="uint256" required>Amount of USDT paid</ParamField>
+    <ParamField path="signature" type="bytes" required>Compliance signature payload</ParamField>
+    <ParamField path="expireTime" type="uint256" required>Signature expiration time</ParamField>
+  </Accordion>
+
+  <Accordion title="burn()" icon="fire">
+    Owner-only function that burns tokens from a specific address for compliance or recovery purposes.
+
+    <CodeGroup>
+    ```solidity burn
+    function burn(address from, uint256 amount) external;
+    ```
+    </CodeGroup>
+
+    <ParamField path="from" type="address" required>Address whose tokens will be burned</ParamField>
+    <ParamField path="amount" type="uint256" required>Amount to burn</ParamField>
+  </Accordion>
+
+  <Accordion title="remainingForSale()" icon="calculator">
+    Returns the remaining number of tokens available for sale.
+
+    <CodeGroup>
+    ```solidity remainingForSale
+    function remainingForSale() external view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ResponseField name="Returns" type="uint256">Remaining number of tokens available for sale</ResponseField>
+  </Accordion>
+
+  <Accordion title="usdtToTokenAmount()" icon="money-bill-transfer">
+    Calculates how many tokens can be minted for a given USDT amount.
+
+    <CodeGroup>
+    ```solidity usdtToTokenAmount
+    function usdtToTokenAmount(uint256 amountUSDT) public view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ParamField path="amountUSDT" type="uint256" required>USDT amount</ParamField>
+    <ResponseField name="Returns" type="uint256">Equivalent token amount</ResponseField>
+  </Accordion>
+
+  <Accordion title="tokenToUSDTAmount()" icon="money-bill-transfer">
+    Calculates the USDT amount required for a given token amount.
+
+    <CodeGroup>
+    ```solidity tokenToUSDTAmount
+    function tokenToUSDTAmount(uint256 tokenAmount) public view returns (uint256);
+    ```
+    </CodeGroup>
+
+    <ParamField path="tokenAmount" type="uint256" required>Token amount</ParamField>
+    <ResponseField name="Returns" type="uint256">Required USDT amount</ResponseField>
+  </Accordion>
+</AccordionGroup>

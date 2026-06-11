@@ -1,45 +1,249 @@
 ---
 title: "Technology and Security"
-description: "Manage asset tokens via mature mainstream public chains and cross-chain technology"
+description: "ArtStar tokenizes RWA assets based on the ERC-20 standard and uses on-chain signature verification plus compliance contracts to form a full compliance management framework."
 # icon: "lock"
 ---
 
-ArtStar will rely on the infrastructure of mature mainstream public chains and cross-chain technology to conduct minting and trading management of asset tokens. This approach helps ArtStar launch quickly, safeguard the security and privacy of sensitive asset data, and ensure transaction transparency. The following summarizes the key technical elements:
+Built on mainstream public blockchain infrastructure, ArtStar tokenizes physical artworks under the ERC-20 standard and establishes an on-chain compliance management contract framework. This architecture preserves transaction transparency while delivering institutional-grade asset security and compliance control.
 
-## Smart Contracts
+## Tokenization Architecture
 
-ArtStar will use smart contracts to manage minting, trading, and staking of asset tokens. Smart contracts can automatically execute core processes such as asset staking, token issuance, and asset transfer.
+### ERC-20 Tokenization Standard
 
-These smart contracts will undergo rigorous testing and auditing by professional third-party security organizations to ensure their security and correctness. In addition, adopting multi-signature contracts can add an extra layer of protection for high-value transactions.
+ArtStar uses the [ERC-20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) standard as the base protocol for asset tokenization.
 
-{/*
+| Parameter        | Configuration Value           | Description                                                |
+| ---------------- | ----------------------------- | ---------------------------------------------------------- |
+| **Decimals**     | 18                            | High precision to support flexible fractional ownership    |
+| **Symbol**       | ARTS / asset-specific symbol  | Easy for market recognition and exchange listings          |
+| **Total Supply** | Anchored to physical asset value | Fixed in aggregate through the compliance management contract |
+
+### Tokenization Workflow
+
+```text
+Physical asset valuation -> Legal structuring -> Smart contract deployment -> KYC/AML verification -> Token issuance
+```
+
+1. **Asset Preparation**: Conduct professional valuation of the physical artwork and design the legal structure, such as an SPV or direct tokenization.
+2. **Custody Arrangement**: Appoint a qualified custodian to safeguard the physical asset and ensure the asset is securely ring-fenced.
+3. **Contract Deployment**: Deploy token contracts that comply with ArtStar standards on BNB Chain (BSC).
+4. **Identity Verification**: Investors complete KYC/AML procedures and their wallet addresses are added to the whitelist.
+5. **Token Distribution**: After compliance checks pass, tokens are securely distributed to investor wallets.
+
+## Compliance Contract Framework
+
+### ComplianceManage Contract Architecture
+
+ArtStar has built a complete on-chain compliance contract framework that delivers institutional-grade compliance control through signature-based authorization.
+
+{/* ```solidity
+// Core compliance management interface
+interface IComplianceManage {
+    // Administrative actions
+    function setAssetController(address controller) external;
+    function pause() external;
+    function unpause() external;
+
+    // Compliance operations
+    function addToWhitelist(address account) external returns (bool);
+    function removeFromWhitelist(address account) external returns (bool);
+    function batchUpdateWhitelist(address[] calldata accounts, bool status) external returns (bool);
+
+    // Signature verification
+    function verifyComplianceSignature(bytes32 messageHash, bytes calldata signature) external view returns (bool);
+    function verifyTransferCompliance(address from, address to, uint256 amount) external view returns (bool);
+
+    // Query interfaces
+    function isWhitelisted(address account) external view returns (bool);
+    function getComplianceStatus(address account) external view returns (ComplianceStatus);
+}
+``` */}
+
+### On-Chain Signature Verification
+
+The compliance management contract uses ECDSA signature verification to ensure that only properly authorized actions can be executed:
+
+```solidity
+// Core signature verification logic
+function _verifySignature(
+        address user,
+        bytes memory signature,
+        uint8 operation,
+        uint256 expireTime
+    ) internal virtual returns (bool) {
+        if (block.timestamp > expireTime) revert SignatureExpired();
+
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(block.chainid, address(this), user, txNonce[user], operation, expireTime)
+        );
+
+        bytes32 ethSignedHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
+
+        address recovered = ECDSA.recover(ethSignedHash, signature);
+
+        if (recovered != owner() && subAdmins[recovered].permissionLevel != PERMISSION_SIGNATURE_MANAGER) return false;
+
+        txNonce[user]++;
+
+        return true;
+    }
+```
+
+### Whitelist Management
+
+| Function             | Description                                                | Permission Requirement     |
+| -------------------- | ---------------------------------------------------------- | -------------------------- |
+| **Address Onboarding** | Add investor addresses that passed KYC to the whitelist  | Compliance administrator   |
+| **Batch Updates**    | Support batch addition or removal of blacklisted addresses | Compliance admin + multisig |
+| **Status Query**     | Query an address's compliance status in real time          | Public interface           |
+| **Automated Checks** | Automatically validate both counterparties during transfers | Inline contract logic      |
+
+### Compliance Parameters
+
+| Parameter                 | Configuration Item      | Description                                |
+| ------------------------- | ----------------------- | ------------------------------------------ |
+| **Investment Limits**     | Min/Max Investment      | USD limits for a single investment         |
+| **Raise Limits**          | Min/Max Raise           | Target fundraising range for an issuance round |
+| **Lock-Up Period**        | Lock Duration           | Vesting or holding period after token delivery |
+| **Transfer Restrictions** | Transfer Restrictions   | Transfers involving blacklisted addresses are prohibited |
 
 ## Blockchain Infrastructure
 
-The ARTChain main-chain platform will build Layer-1 infrastructure and open Layer-1 technical ecosystem applications. Validators in the network will be selected based on their holdings and contributions in the platform's native ArtStar TOKEN, incentivizing participants to act honestly.
+### BNB Chain Multi-Layer Architecture
 
-- **ARTChain Main Chain Layer-1 Network Facilities**
-  - Node operator network: ensure security and validate the network
-  - Block producer network
-  - The blockchain ledger itself and transaction history
-  - The network's consensus mechanism
+ArtStar selects BNB Chain as its primary deployment network and benefits from its mature infrastructure:
 
-- **ARTChain Main Chain Layer-1 Network Facilities**
-  - Primary goal: address the blockchain "impossible trinity" by increasing TPS without sacrificing decentralization and security
-  - Avoid high fees caused by main-chain congestion and prevent users from being "crowded out"
-  - Lower fees by processing transactions outside Layer-1
-  - Support access for multi-scenario ecosystem applications
+| Chain                         | Role            | Key Characteristics                                 |
+| ----------------------------- | --------------- | --------------------------------------------------- |
+| **BSC (BNB Smart Chain)**     | Main network    | Scalable, low cost, secure, and production-ready    |
+| **opBNB**                     | Scaling layer   | Higher TPS and lower gas, suitable for high-frequency activity |
 
-- **ARTChain Stablecoin Network Infrastructure**
-  - Support building the stablecoin network through upgrades and structured coordination of the Layer-1 and Layer-1 network layers
-*/}
+### Chain Selection Considerations
 
-## Cryptographic Security
+| Consideration     | BSC Advantage          | L2 Option                     |
+| ----------------- | ---------------------- | ----------------------------- |
+| **Gas Fees**      | Very low (about $0.05/tx) | Can be reduced by another 10x-100x |
+| **Transaction Speed** | ~3-second block time | Near-instant confirmation     |
+| **Ecosystem**     | Mature and tooling-rich | Rapidly evolving              |
+| **Use Cases**     | Standard trading and staking | High-frequency trading and small-ticket assets |
 
-Blockchain technology has strong security properties that comprehensively protect user data and transaction details. Encryption remains effective throughout the entire data transmission process, significantly reducing the risk of information leakage.
+## Security Architecture
 
-Assets can be tokenized via the ERC-20 standard, ensuring that tokens corresponding to physical assets are unique (non-duplicable) and verifiable. Users can verify token authenticity and validity at any time, laying a solid foundation for managing tokenized asset circulation and ensuring security and reliability during tokenized flows.
+### Layered Security Controls
 
-## Decentralized Oversight of Assets
+```text
+┌────────────────────────────────────────────────────────────┐
+│                     Security Architecture                  │
+├────────────────────────────────────────────────────────────┤
+│  Layer 1: Smart Contract Security                         │
+│    - Professional security audits by independent firms    │
+│    - Formal verification                                  │
+│    - Bug bounty program                                   │
+│                                                            │
+│  Layer 2: Access Control                                  │
+│    - Multi-signature wallets for sensitive operations     │
+│    - Timelock protection for critical actions             │
+│    - Role-based access control                            │
+│                                                            │
+│  Layer 3: Compliance Verification                         │
+│    - KYC/AML identity verification                        │
+│    - On-chain signature verification                      │
+│    - Whitelist controls                                   │
+│                                                            │
+│  Layer 4: Asset Custody                                   │
+│    - Physical assets: qualified custodians / trustees     │
+│    - Digital assets: MPC + HSM cold storage               │
+└────────────────────────────────────────────────────────────┘
+```
 
-To effectively safeguard the integrity and security of physical cultural relics and artworks, the ArtStar community will actively engage independent professionals with international standing. These professionals will conduct regular independent oversight reviews of physical assets provided by the relevant Hong Kong limited companies. Upon completion, review results will be promptly disclosed to the public to ensure transparency and fairness, enabling all parties to stay informed of the true status of the physical assets.
+### Smart Contract Audits
+
+ArtStar smart contracts must go through the following security assurance process:
+
+1. **Internal Code Review**: Multiple rounds of review performed by the development team.
+2. **Third-Party Security Audit**: Independent blockchain security firms, such as Trail of Bits, CertiK, or OpenZeppelin, review the contracts.
+3. **Formal Verification**: Critical logic is mathematically validated where appropriate.
+4. **Testnet Validation**: Contracts are thoroughly exercised on test networks before mainnet deployment.
+5. **Bug Bounty Program**: A continuous bug bounty program remains available after launch.
+
+### Multisignature Governance
+
+| Operation Type       | Signature Requirement | Description                                  |
+| -------------------- | --------------------- | -------------------------------------------- |
+| **Parameter Changes** | 2/3 multisig         | Update limits, lock-up duration, and similar parameters |
+| **Whitelist Management** | Single admin signature + logging | Day-to-day operational action         |
+| **Asset Migration**  | 3/5 multisig          | High-risk action requiring multiple approvals |
+| **Contract Upgrade** | Timelock + multisig   | Includes a 48-hour delay window              |
+
+## Asset Custody Framework
+
+### Physical Asset Custody
+
+| Custody Element        | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| **Custodian Qualification** | Licensed professional custody institution    |
+| **Physical Security**  | Professional vaults, fire and water protection, and surveillance |
+| **Insurance Coverage** | Adequate property insurance coverage             |
+| **Periodic Audit**     | Independent verification of the physical asset's existence |
+
+### Digital Asset Custody
+
+| Custody Method            | Technical Implementation | Applicable Scenario         |
+| ------------------------- | ------------------------ | --------------------------- |
+| **MPC Wallet**            | Private key sharding through multi-party computation | Institutional asset management |
+| **Hardware Security Module (HSM)** | Dedicated hardware security chip | High-security storage |
+| **Multisig Wallet**       | Joint control by multiple parties | Large-value asset operations |
+
+## Compliance and Regulatory Framework
+
+### International Compliance Standards
+
+ArtStar aligns with the following international compliance standards:
+
+| Compliance Area   | Standard / Regulation        | Implementation Approach          |
+| ----------------- | ---------------------------- | -------------------------------- |
+| **KYC**           | FATF Recommendations         | Identity verification + address whitelisting |
+| **AML**           | Financial Action Task Force  | Transaction monitoring + suspicious activity reporting |
+| **Securities Compliance** | Hong Kong SFO / relevant jurisdictions | ERC-3643-compatible design |
+| **Data Protection** | GDPR / PDPO                | Minimal on-chain data + encrypted storage |
+
+### Independent Regulatory Review
+
+> The ArtStar community will appoint internationally recognized independent professionals to conduct periodic independent regulatory reviews of physical assets. The review results will be disclosed to the public in a timely manner.
+
+- **Review Frequency**: Quarterly or annual independent audits
+- **Review Scope**: Physical asset existence, integrity, and custody compliance
+- **Disclosure**: Transparent and public review reports
+
+## Evolution of Compliance Token Standards
+
+The ArtStar tokenization architecture is compatible with the following token standard evolution path:
+
+| Standard       | Type               | Applicable Scenario                  | Compliance Capability                           |
+| -------------- | ------------------ | ------------------------------------ | ----------------------------------------------- |
+| **ERC-20**     | Fungible token     | Current model for fractionalized art | Basic compliance through whitelist controls     |
+| **ERC-3643**   | Permissioned token | Scenarios with higher compliance requirements | Native KYC/AML and investor eligibility controls |
+| **ERC-1400**   | Security token     | Institutional-grade security tokenization | Partitioned transfers and attached legal documentation |
+
+> **Evolution Strategy**: ArtStar adopts a modular design that can progressively upgrade token standards in response to regulatory requirements, enabling a smooth transition from ERC-20 to ERC-3643 or ERC-1400.
+
+## Technology Stack Overview
+
+| Technical Component | Technology Choice               | Description                                |
+| ------------------- | ------------------------------- | ------------------------------------------ |
+| **Smart Contracts** | Solidity + Hardhat              | Mainstream general-purpose contract stack  |
+| **Frontend**        | Vite + React + TypeScript       | Modern Web3 application development        |
+| **Web3 Library**    | wagmi + viem                    | Consistent with ethers.js v6 best practices |
+| **Testing Framework** | Hardhat + Vitest              | Full-stack testing for contracts and components |
+| **Chain ID**        | BSC Mainnet: 56 / Testnet: 97   | Configured for the BSC network             |
+| **Identity**        | Supabase Auth / Privy           | Web3 identity with a familiar Web2-like user experience |
+
+---
+
+## References
+
+- [BNB Chain RWA Tokenization Guide](https://docs.bnbchain.org/showcase/tokenization/rwa-tokenization/)
+- [RWA Tokenization: Standards and Costs](https://www.rwa.io/post/ethereum-rwa-tokenization-standards-and-costs)
+- [ERC-20 Standard](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/)
+- [ERC-3643](https://www.erc3643.org/)
+- [OpenZeppelin Contracts](https://www.openzeppelin.com/contracts/)

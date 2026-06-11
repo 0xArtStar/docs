@@ -1,0 +1,29 @@
+---
+title: "ArtStarERC1967Proxy"
+description: "An `ERC1967Proxy` wrapper tailored for Ignition deployment and the UUPS upgrade pattern."
+---
+
+<Card title="Source Code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol">
+  View the ArtStarERC1967Proxy.sol source code
+</Card>
+
+## Methods
+
+<AccordionGroup>
+  <Accordion title="constructor()" icon="cube">
+    Initializes the upgradeable proxy with the initial implementation contract and initialization calldata.
+
+    <CodeGroup>
+    ```solidity constructor
+    constructor(address implementation, bytes memory data);
+    ```
+    </CodeGroup>
+
+    <ParamField path="implementation" type="address" required>
+      Address of the initial logic contract implementation
+    </ParamField>
+    <ParamField path="data" type="bytes" required>
+      Initialization calldata
+    </ParamField>
+  </Accordion>
+</AccordionGroup>

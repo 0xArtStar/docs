@@ -91,12 +91,19 @@
                 "pages": ["/technical/en/technical-security"]
               },
               {
+                "group": "Contract Functions",
+                "pages": [
+                  "/technical/contracts/functions/en/RWAToken",
+                  "/technical/contracts/functions/en/ComplianceManage",
+                  "/technical/contracts/functions/en/ArtStarERC1967Proxy"
+                ]
+              },
+              {
                 "group": "Contract Methods",
                 "pages": [
-                  "/api-reference/en/endpoint/get",
-                  "/api-reference/en/endpoint/create",
-                  "/api-reference/en/endpoint/delete",
-                  "/api-reference/en/endpoint/webhook"
+                  "/technical/contracts/explanation/en/RWAToken",
+                  "/technical/contracts/explanation/en/ComplianceManage",
+                  "/technical/contracts/explanation/en/ArtStarERC1967Proxy"
                 ]
               }
             ]
@@ -201,16 +208,17 @@
                 "group": "合约方法",
                 "pages": [
                   "/technical/contracts/functions/zh/RWAToken",
-                  "/technical/contracts/functions/zh/ArtStarERC1967Proxy",
-                  "/technical/contracts/functions/zh/ComplianceManage"
+                  "/technical/contracts/functions/zh/ComplianceManage",
+                  "/technical/contracts/functions/zh/ArtStarERC1967Proxy"
+                  
                 ]
               },
               {
-                "group": "技术说明",
+                "group": "合约说明",
                 "pages": [
-                  "/technical/contracts/technology/zh/RWAToken",
-                  "/technical/contracts/technology/zh/ArtStarERC1967Proxy",
-                  "/technical/contracts/technology/zh/ComplianceManage"
+                  "/technical/contracts/explanation/zh/RWAToken",
+                  "/technical/contracts/explanation/zh/ComplianceManage",
+                  "/technical/contracts/explanation/zh/ArtStarERC1967Proxy"
                 ]
               }
             ]

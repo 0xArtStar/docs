@@ -1,69 +1,69 @@
 ---
-title: "Wallet & BNB Chain"
-description: "Analysis of the first threshold for users entering ArtStar: wallet connection, status initialization, and network guard mechanism."
+title: "Wallet Connection and Network Switching"
+description: "Explains the first access checkpoint in ArtStar, including wallet connection, state initialization, and network guard behavior."
 ---
 
 ## Overview
 
-The wallet is the user's on-chain identity entrance in ArtStar, and it is also the foundation for subsequent login, KYC, authorization, subscription, and position display. The network determines whether these interactions occur in the correct chain environment.
+The wallet is the user's on-chain identity entry point in ArtStar. It is also the foundation for subsequent login, KYC, approvals, subscriptions, and portfolio display. The network, in turn, determines whether those interactions occur on the correct chain.
 
-Therefore, wallet connection and network switching are not simply technical prerequisites, but the first threshold determining whether a user can smoothly participate in the platform. If the wallet status is unstable, all subsequent processes will be affected.
+As a result, wallet connection and network switching are not just technical prerequisites. They are the first checkpoint that determines whether a user can participate in the platform smoothly. If wallet state is unstable, every downstream flow can be affected.
 
 ## Access Mechanism and Functions
 
 <AccordionGroup>
-  <Accordion title="Why is wallet access important?" icon="wallet">
-    In ArtStar, the wallet assumes at least the following roles:
+  <Accordion title="Why Is Wallet Connection Important?" icon="wallet">
+    In ArtStar, the wallet serves at least the following purposes:
     * Identifies the user's on-chain address
-    * Coordinates with signatures to complete login authentication
-    * Queries stablecoin balances and authorization status
-    * Initiates on-chain transactions (Approve / Mint)
-    * Displays user positions and asset records
+    * Works with signatures to complete login authentication
+    * Retrieves stablecoin balances and approval status
+    * Initiates on-chain transactions such as `Approve` and `Mint`
+    * Displays the user's holdings and asset history
   </Accordion>
   <Accordion title="Network Guard Mechanism" icon="shield">
-    ArtStar's core interactions run on a designated chain. To prevent users from staying on the wrong network resulting in asset reading errors or transaction failures, the frontend usually needs the following capabilities:
-    * Detect the current Chain ID and determine if it's the target chain
-    * **Block critical write operations** when on the wrong chain
-    * Guide users to switch networks with one click
-    * Automatically restore the interaction flow after a successful switch
+    ArtStar's core interactions run on a designated blockchain. To prevent asset-reading errors or transaction failures caused by the wrong network, the frontend typically needs to:
+    * Detect the current chain ID and determine whether it matches the target network
+    * **Block critical write operations** when the user is on the wrong network
+    * Guide the user through one-click network switching
+    * Resume the interaction flow automatically after a successful switch
   </Accordion>
 </AccordionGroup>
 
 ## Basic Access Flow
 
-From a product perspective, the goal of this step is not "connecting the wallet" itself, but allowing the platform to identify and serve the current user:
+From a product perspective, the goal of this step is not simply to "connect a wallet," but to allow the platform to identify and serve the current user correctly:
 
 <Steps>
-  <Step title="Connect Wallet">The user clicks connect wallet, invoking the wallet extension or app.</Step>
-  <Step title="Get Address">The wallet authorizes the connection and returns the current address.</Step>
-  <Step title="Status Initialization">The frontend initializes UI states related to that address.</Step>
-  <Step title="Signature Login">If necessary, guide the user to complete signature verification to establish a backend session.</Step>
-  <Step title="Data Reading">The frontend continues to read balance, network, and permission-related information, entering the main business flow.</Step>
+  <Step title="Connect Wallet">The user clicks Connect Wallet, which invokes the wallet extension or app.</Step>
+  <Step title="Get Address">The wallet authorizes the connection and returns the active address.</Step>
+  <Step title="State Initialization">The frontend initializes UI state associated with that address.</Step>
+  <Step title="Signature Login">If required, the user completes signature verification to establish a backend session.</Step>
+  <Step title="Data Loading">The frontend continues by reading balances, network details, and permission-related data before entering the core business flow.</Step>
 </Steps>
 
 ## Common Exceptions and Troubleshooting
 
-Users may encounter the following issues during the wallet connection and network switching phases. The frontend needs to provide clear, actionable prompts rather than just generic error messages:
+Users may run into the following issues during wallet connection and network switching. The frontend should provide clear, actionable guidance rather than generic error messages:
 
 <Card title="Common Errors" icon="bug">
-  * Wallet extension not installed or not invoked
-  * Wallet connection request rejected by the user
-  * Address reading failed
-  * Current network error (not on the target network like BNB Chain)
-  * Automatic switch request unresponsive
-  * Compatibility issues with built-in browsers in mobile wallets
+  * The wallet extension is not installed or cannot be launched
+  * The user rejects the wallet connection request
+  * The active address cannot be retrieved
+  * The current network is incorrect, such as not being on BNB Chain
+  * The automatic network-switch request does not respond
+  * The in-app browser of a mobile wallet has compatibility issues
 </Card>
 
 ## Pitfall Guide
 
-<Callout type="warning" title="Connecting the wallet ≠ Completing login">
-  Connecting the wallet only gets the address. If the platform also requires signature-based backend sessions, the user might still be in a "connected but not logged in" state, requiring explicit frontend guidance.
+<Callout type="warning" title="Connecting a wallet does not equal logging in">
+  Wallet connection only provides the address. If the platform also requires a signature-based backend session, the user may still be "connected but not signed in," and the frontend should guide them accordingly.
 </Callout>
 
-<Callout type="danger" title="Automatic network switching is not always successful">
-  Some wallets, browsers, or mobile environments do not support stable automatic switching, so you cannot assume it will always succeed after calling the switch method once. A post-check based on the actual Chain ID is required.
+<Callout type="danger" title="Automatic network switching is not guaranteed to succeed">
+  Some wallets, browsers, or mobile environments do not support reliable automatic switching. Do not assume a single switch call completes successfully. Always validate the result against the actual chain ID afterward.
 </Callout>
 
-<Callout type="info" title="Synchronously clear status after wallet disconnection">
-  When the user actively disconnects the wallet, the platform should synchronously clear the page status, cached data, and session information dependent on that address to avoid anomalies caused by residual old data.
+<Callout type="info" title="Clear dependent state after wallet disconnection">
+  When the user disconnects the wallet, the platform should clear page state, cached data, and session information tied to that address to prevent issues caused by stale data.
 </Callout>

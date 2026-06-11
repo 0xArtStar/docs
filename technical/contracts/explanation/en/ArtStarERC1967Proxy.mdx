@@ -1,0 +1,145 @@
+---
+title: "ArtStarERC1967Proxy"
+description: "ArtStarERC1967Proxy is the proxy shell contract in the ArtStar contract system. Its source code is extremely small—essentially a thin wrapper around OpenZeppelin’s ERC1967Proxy—yet it plays a critical role in the upgrade architecture."
+---
+
+<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol">
+  View ArtStarERC1967Proxy contract source code
+</Card>
+
+<AccordionGroup>
+<Accordion title="1. Overview" icon="file-lines">
+The on-chain state is not held by the `RWAToken` or `ComplianceManage` implementation contracts. It is held by this proxy instance. This document explains why a contract with only a constructor is still a fundamental part of the system architecture.
+</Accordion>
+
+<Accordion title="2. Responsibilities and Why It Exists" icon="building">
+`ArtStarERC1967Proxy` can be summarized as:
+
+- A standardized proxy container that holds the state of upgradeable contracts.
+- A stable, explicit, and reusable proxy entrypoint for the Hardhat Ignition deployment flow.
+
+From a deployment and runtime perspective, it determines key facts:
+- Users typically interact with the proxy address, not the implementation address.
+- The implementation can be replaced, while the proxy address and proxy state are preserved.
+- Initialization is not performed in the implementation constructor. It is executed once during proxy deployment via the `data` parameter.
+</Accordion>
+
+<Accordion title="3. ERC-1967 Standard" icon="book">
+`ERC-1967` is a key standard for proxy patterns. It defines fixed storage slots for metadata such as the implementation address. Standardizing these slots provides:
+
+- Avoidance of storage collisions between proxy internals and business state variables.
+- Easier identification of proxy relationships by tooling, explorers, and auditors.
+- Upgrades and deployments that follow common industry conventions instead of project-specific layouts.
+
+ArtStar reuses OpenZeppelin’s `ERC1967Proxy` implementation directly, and OpenZeppelin maintains the standardized slot definitions.
+</Accordion>
+
+<Accordion title="4. UUPS Proxy Pattern" icon="arrows-rotate">
+This project adopts the **UUPS upgrade pattern**, not the transparent proxy pattern.
+
+<Tabs>
+  <Tab title="Transparent proxy">
+    Upgrade management capabilities are typically implemented on the proxy side.
+  </Tab>
+  <Tab title="UUPS">
+    The upgrade entrypoint and authorization logic are implemented on the implementation side.
+  </Tab>
+</Tabs>
+
+As a result, `ArtStarERC1967Proxy` does not contain an upgrade authorization strategy. The “who can upgrade” decision is enforced by `_authorizeUpgrade()` in the current implementation:
+- `RWAToken` gates upgrades via `onlyOwner`.
+- `ComplianceManage` also gates upgrades via `onlyOwner`.
+
+<Info>
+**Key takeaways for UUPS:**
+- The proxy stores the state.
+- The current implementation decides upgrade authorization.
+</Info>
+</Accordion>
+
+<Accordion title="5. Minimal Wrapper Design" icon="box">
+The current implementation is:
+
+```solidity ArtStarERC1967Proxy.sol
+contract ArtStarERC1967Proxy is ERC1967Proxy {
+  constructor(address implementation, bytes memory data) ERC1967Proxy(implementation, data) {}
+}
+```
+
+This is a typical minimal-wrapper approach that fully reuses OpenZeppelin’s proxy behavior.
+
+<Columns>
+  <Column>
+    **Benefits**
+    - Extremely small proxy surface area, making audits more tractable.
+    - Upgrade semantics stay aligned with mature library defaults.
+    - Deployment scripts can reference a project-owned proxy name for stable artifacts and deployment records.
+  </Column>
+  <Column>
+    **Trade-offs**
+    - Without understanding `ERC-1967` and UUPS, readers may underestimate its importance.
+    - More upgrade risk is shifted to implementation contracts and operational processes rather than being guarded at the proxy layer.
+  </Column>
+</Columns>
+</Accordion>
+
+<Accordion title="6. Initialization Calldata and Deployment Flow" icon="rocket">
+The proxy constructor takes two parameters:
+1. `implementation`: the initial implementation contract address.
+2. `data`: calldata that is delegate-called immediately after deployment to initialize state.
+
+Together they accomplish “deploy proxy + initialize business state” in one step, reducing the high-risk scenario where a contract is deployed but left uninitialized.
+</Accordion>
+
+<Accordion title="7. Relationship with Ignition Deployment Modules" icon="fire">
+Ignition uses this proxy in a straightforward way:
+
+- `ComplianceManage`: deploy the implementation, then pass the encoded `initialize(deployer)` calldata as `data` when deploying the proxy (mapped as `ComplianceManageProxy`).
+- `RWAToken`: deploy the implementation, then pass encoded `initialize(...)` (name, symbol, and other parameters) as `data` when deploying the proxy (mapped as `RWATokenProxy`).
+
+The deployment script continues to call business functions on the proxy instance afterward. This shows the proxy is not a temporary deployment artifact—it is the formal runtime entrypoint for the system.
+</Accordion>
+
+<Accordion title="8. Responsibility Boundary vs. Implementations" icon="shield">
+Proxy and implementation responsibilities must be strictly separated:
+
+- **Proxy contract**: stores state, receives external calls, and delegates calls to the implementation.
+- **Implementation contract**: defines business logic, access control, upgrade authorization, and storage layout.
+
+<Warning>
+**Boundary constraints:**
+- The proxy does not define sale, compliance, or blacklist logic.
+- The proxy does not decide who can upgrade.
+- `RWAToken` and `ComplianceManage` must ensure storage layout compatibility across versions.
+- Operations and audits must distinguish between “proxy address” and “implementation address”.
+</Warning>
+</Accordion>
+
+<Accordion title="9. Upgrade Risks and Operational Notes" icon="triangle-exclamation">
+Major risks include:
+
+<Steps>
+  <Step title="Storage layout risk">
+    Adding, removing, or reordering state variables in an implementation can break existing state stored in the proxy.
+  </Step>
+  <Step title="Initialization risk">
+    If future versions introduce new initialization paths, reinitializers must be used carefully to avoid double-initialization or missing initialization.
+  </Step>
+  <Step title="Address selection risk">
+    Deployments, verification, and frontend/backend integrations must use the proxy address as the system entrypoint, not the implementation address.
+  </Step>
+  <Step title="Privilege awareness risk">
+    If a team assumes the proxy holds upgrade governance, it may overlook the `_authorizeUpgrade()` logic in the implementation.
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="10. Why Documentation Is Still Necessary" icon="lightbulb">
+This proxy touches three high-risk topics:
+- How proxy storage coexists with business storage.
+- How implementations can be upgraded without changing the user-facing address.
+- How deployment scripts initialize a proxy in one step to make the business system usable.
+
+Without a dedicated explanation, readers are likely to misinterpret the architecture. Even as a thin wrapper, it still warrants explicit documentation.
+</Accordion>
+</AccordionGroup>

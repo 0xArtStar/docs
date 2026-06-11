@@ -1,0 +1,162 @@
+---
+title: "ComplianceManage"
+description: "ComplianceManage is ArtStar’s standalone compliance control module. It separates list management, signature authorization, caller restrictions, and sub-admin permissions into an independently upgradeable contract."
+---
+
+<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol">
+  View ComplianceManage contract source code
+</Card>
+
+<AccordionGroup>
+<Accordion title="1. Overview" icon="file-lines">
+`ComplianceManage` does not mint tokens and does not manage asset sale state. It is called by business contracts such as `RWAToken`. Its core value is separating “whether a user is allowed to perform a specific operation” from the token business layer, forming a compliance service layer that can be governed and upgraded independently.
+</Accordion>
+
+<Accordion title="2. Responsibilities and Compliance Model" icon="scale-balanced">
+The current compliance model is not a pure whitelist. It combines three mechanisms:
+
+- **Blacklist**: blacklisted addresses are rejected directly on the token transfer path.
+- **Signature authorization**: before sensitive operations such as primary purchases, a user must present a valid signature authorization.
+- **Verified token caller restriction**: only approved business contracts can consume (validate and use) these signature authorizations.
+
+<Note>
+`ComplianceManage` is not a general-purpose KYC registry and not a full identity system. It is positioned as an on-chain compliance controller for specific business contracts.
+</Note>
+</Accordion>
+
+<Accordion title="3. Standards, EIPs, and Cryptographic Components" icon="key">
+<Tabs>
+  <Tab title="ECDSA">
+    `ECDSA` is the most common signature recovery mechanism on Ethereum. This implementation uses `ECDSA.recover()` to recover the signer from a message digest and signature, then checks whether the signer is the owner or an authorized signature manager.
+  </Tab>
+  <Tab title="EIP-191 style signatures">
+    This project does not use `EIP-712` typed data. Instead, it uses an `EIP-191`-style “Ethereum Signed Message” flow:
+    1. Build the raw message digest via `keccak256(abi.encodePacked(...))`.
+    2. Add the Ethereum signed message prefix using `MessageHashUtils.toEthSignedMessageHash()`.
+    3. Recover the signer address via `ECDSA.recover()`.
+  </Tab>
+  <Tab title="Fields bound into the message">
+    The signature message binds the following fields to prevent replay:
+    - `block.chainid` (prevents cross-chain replay)
+    - `address(this)` (prevents cross-contract replay)
+    - `user` (binds the user)
+    - `txNonce[user]` (ensures one-time consumption)
+    - `operation` (distinguishes business actions)
+    - `expireTime` (limits validity window)
+  </Tab>
+</Tabs>
+
+Architecture components:
+- **ERC-1967 and UUPS**: runs behind an `ERC-1967` proxy using `UUPSUpgradeable`. Upgrade authorization is controlled by `_authorizeUpgrade()`.
+- **Initializable and OwnableUpgradeable**: as an upgradeable instance, initialization must be done via `initialize()`. `OwnableUpgradeable` provides top-level governance control.
+</Accordion>
+
+<Accordion title="4. Permission Model and Role Boundaries" icon="users">
+The contract defines three primary roles:
+
+<Columns>
+  <Column>
+    **Owner**
+    The highest-privilege role. Can set or revoke sub-admins and controls upgrades.
+  </Column>
+  <Column>
+    **List manager**
+    `PERMISSION_LIST_MANAGER`, responsible for blacklist management.
+  </Column>
+  <Column>
+    **Signature manager**
+    `PERMISSION_SIGNATURE_MANAGER`, responsible for signature authorization operations and approving which token contracts can call signature verification.
+  </Column>
+</Columns>
+
+<Tip>
+This separation reduces blast radius if a hot wallet is compromised or misused. List managers do not need upgrade privileges, and signature managers do not need full governance authority.
+</Tip>
+</Accordion>
+
+<Accordion title="5. Blacklist Management" icon="ban">
+The blacklist is stored as `mapping(address => bool) public blacklist`. Business contracts can read the mapping directly or query via `isBlacklisted()` (read-only).
+
+Two update methods are provided:
+1. `setBlacklist(address[] calldata users, bool status)`: batch updates, up to 100 addresses per call.
+2. `setBlacklistSingle(address user, bool status)`: single-address update.
+
+**Design notes:**
+- The batch interface caps length to avoid extreme gas usage from oversized arrays.
+- State is written and events are emitted only when the status actually changes.
+- The zero address is rejected in the single-address function; in the batch function it is skipped.
+</Accordion>
+
+<Accordion title="6. Signature Verification Flow and Replay Protection" icon="signature">
+`verifySignature()` is the key business entrypoint and is protected by `onlyVerifiedToken`. A typical flow is:
+
+<Steps>
+  <Step title="Input parameters">
+    The business contract provides `user`, `signature`, `operation`, and `expireTime`.
+  </Step>
+  <Step title="Time check">
+    The contract checks whether the current timestamp has exceeded `expireTime`.
+  </Step>
+  <Step title="Build digest">
+    It builds the digest from chain ID, contract address, user, current nonce, operation type, and expiration time.
+  </Step>
+  <Step title="Recover signer">
+    It converts the digest to an `EIP-191` signed message and recovers the signer, then validates whether the signer is the owner or a signature manager.
+  </Step>
+  <Step title="Consume authorization">
+    If valid, it increments `txNonce[user]` to consume the authorization.
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="7. Verified Token Allowlist" icon="check-double">
+The `verifiedTokens` mapping restricts which business contracts can call `verifySignature()`.
+
+- `RWAToken` is registered as a verified token after deployment.
+- Calls from unregistered addresses revert with `TokenNotVerified()`.
+- Allowing a business contract to consume signatures is an independent governance decision.
+
+This is a key boundary that decouples the “compliance service layer” from the “business contract layer”.
+</Accordion>
+
+<Accordion title="8. Sub-admin Configuration Model" icon="user-gear">
+Sub-admin configuration is stored as `mapping(address => SubAdmin) public subAdmins`:
+
+```solidity
+struct SubAdmin {
+    address wallet;
+    uint256 permissionLevel;
+    uint256 authorizedAt;
+}
+```
+
+This uses a single permission-level field rather than a complex bitmask/boolean authorization table, which fits the current scope where roles are simple and responsibilities are clearly separated.
+</Accordion>
+
+<Accordion title="9. Upgrade Mechanism and Storage Compatibility" icon="arrow-up-right-dots">
+Upgrade authorization:
+
+```solidity
+function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+```
+
+- The proxy shell does not decide who can upgrade; the owner ultimately controls it.
+- New implementations must preserve storage layout compatibility. `uint256[50] private __gap;` reserves space for future variables, but it does not permit arbitrary reordering of state variables.
+</Accordion>
+
+<Accordion title="10. Security Analysis and Audit Focus" icon="shield-halved">
+Audit focus should include:
+- Whether the signature path matches the off-chain signing service exactly, especially the encoding order of `operation` and nonce.
+- Whether `verifiedTokens` contains only trusted business contracts.
+- Whether signature-manager and list-manager privileges align with the operational process.
+- Whether the owner role is controlled via a secure multisig or governance process for upgrades and admin management.
+- Whether future upgrades keep the message format and nonce semantics compatible.
+</Accordion>
+
+<Accordion title="11. Interaction with RWAToken" icon="handshake">
+`RWAToken` is one of the primary callers of `ComplianceManage`:
+
+- **Transfer integration**: `RWAToken._update()` queries the `blacklist` mapping directly to reject transfers involving blacklisted addresses.
+- **Subscription integration**: `RWAToken.mint()` calls `verifySignature()`, requiring buyers to pass signature authorization before `USDT` payment and token minting can proceed.
+</Accordion>
+</AccordionGroup>
