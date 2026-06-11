@@ -21,14 +21,14 @@ Tokenization is the underlying representation of this process. It converts high-
     * **State synchronization**: post-transaction updates to asset status and the user’s holdings
   </Accordion>
 
-  <Accordion title="Why Tokenization Matters" icon="coin">
-    Tokenization is not mere presentation or packaging. It is the foundation of ArtStar’s product mechanism:
-    
-    * Shifts art investment from whole-asset ownership to fractional participation
-    * Provides a standardized on-chain representation for primary issuance
-    * Establishes a structured basis for holdings queries and state synchronization
-    * Enables subsequent liquidity provisioning and secondary-market trading
-  </Accordion>
+<Accordion title="Why Tokenization Matters" icon="coin">
+  Tokenization is not mere presentation or packaging. It is the foundation of
+  ArtStar’s product mechanism: * Shifts art investment from whole-asset
+  ownership to fractional participation * Provides a standardized on-chain
+  representation for primary issuance * Establishes a structured basis for
+  holdings queries and state synchronization * Enables subsequent liquidity
+  provisioning and secondary-market trading
+</Accordion>
 
   <Accordion title="Share Calculation Logic" icon="calculator">
     The number of shares is typically determined by the payment amount and the unit price.
@@ -50,25 +50,31 @@ Tokenization is the underlying representation of this process. It converts high-
 Users usually need to meet the following conditions before they can proceed with a valid subscription. If any item is not satisfied, the frontend should clearly block the flow and show an explicit prompt.
 
 <Card title="Checklist" icon="list-check">
-  * Wallet connected
-  * Logged in or account identity recognized
-  * Switched to the target network
-  * KYC completed
-  * Whitelist or eligibility requirements met
-  * Sufficient stablecoin balance in the wallet
-  * Stablecoin allowance meets requirements
+  * Wallet connected * Logged in or account identity recognized * Switched to
+  the target network * KYC completed * Whitelist or eligibility requirements met
+  * Sufficient stablecoin balance in the wallet * Stablecoin allowance meets
+  requirements
 </Card>
 
 ### Two-Step Purchase Flow
 
 <Steps>
   <Step title="Step 1: Approve (Authorization)">
-    The user first calls the stablecoin contract’s approval method, allowing the target contract to deduct the required amount within the approved limit.
-    <Warning>This step grants spending permission and does not mean the purchase is complete.</Warning>
+    The user first calls the stablecoin contract’s approval method, allowing the
+    target contract to deduct the required amount within the approved limit.
+    <Warning>
+      This step grants spending permission and does not mean the purchase is
+      complete.
+    </Warning>
   </Step>
   <Step title="Step 2: Mint / Purchase (Subscription/Mint)">
-    After approval succeeds, the user calls the target asset contract’s purchase or mint method. Based on the payment amount, price, and rules, the contract issues the corresponding shares to the user.
-    <Check>The subscription is only completed after this step, when the user receives the tokenized shares.</Check>
+    After approval succeeds, the user calls the target asset contract’s purchase
+    or mint method. Based on the payment amount, price, and rules, the contract
+    issues the corresponding shares to the user.
+    <Check>
+      The subscription is only completed after this step, when the user receives
+      the tokenized shares.
+    </Check>
   </Step>
 </Steps>
 
@@ -78,10 +84,10 @@ Users usually need to meet the following conditions before they can proceed with
 
 At minimum, the frontend should handle the following key steps during subscription:
 
-* **Data reads**: current price and remaining allocation, user stablecoin balance, and stablecoin allowance
-* **Interaction control**: button text/clickability based on state; sequencing approval and purchase transactions
-* **Error handling**: user signature rejection, insufficient balance, network errors, and other exceptions
-* **State sync**: refresh holdings and progress state after transactions
+- **Data reads**: current price and remaining allocation, user stablecoin balance, and stablecoin allowance
+- **Interaction control**: button text/clickability based on state; sequencing approval and purchase transactions
+- **Error handling**: user signature rejection, insufficient balance, network errors, and other exceptions
+- **State sync**: refresh holdings and progress state after transactions
 
 ### Common Failure Causes
 
@@ -89,31 +95,34 @@ When a user is blocked during subscription, investigate the following common cau
 
 <AccordionGroup>
   <Accordion title="User / State Causes">
-    * KYC not approved
-    * Whitelist not approved
-    * The offering is sold out or has ended
+    * KYC not approved * Whitelist not approved * The offering is sold out or
+    has ended
   </Accordion>
   <Accordion title="Asset / Transaction Causes">
-    * Insufficient stablecoin balance
-    * Insufficient allowance
-    * Wrong wallet network
-    * User rejected the signature
-    * Contract execution reverted
+    * Insufficient stablecoin balance * Insufficient allowance * Wrong wallet
+    network * User rejected the signature * Contract execution reverted
   </Accordion>
 </AccordionGroup>
 
 ## Pitfalls (Common Mistakes)
 
 <Callout type="warning" title="Approval success does not mean purchase success">
-  Many users assume that once Approve is done, the purchase is complete. The frontend should clearly differentiate “Approval completed” from “Subscription completed” and provide corresponding guidance.
+  Many users assume that once Approve is done, the purchase is complete. The
+  frontend should clearly differentiate “Approval completed” from “Subscription
+  completed” and provide corresponding guidance.
 </Callout>
 
 <Callout type="danger" title="Decimal handling must be consistent">
-  The stablecoin and the target asset may have different `decimals`. If the display layer and contract-interaction layer handle decimals inconsistently, the UI may look correct while the on-chain transfer amount is wrong.
+  The stablecoin and the target asset may have different `decimals`. If the
+  display layer and contract-interaction layer handle decimals inconsistently,
+  the UI may look correct while the on-chain transfer amount is wrong.
 </Callout>
 
 <Callout type="info" title="Do not rely on local UI state alone">
-  After a transaction is broadcast, the final outcome still depends on block confirmations and backend synchronization. Do not assume the asset is credited based only on local frontend variables; listen for on-chain confirmations or refresh via an API.
+  After a transaction is broadcast, the final outcome still depends on block
+  confirmations and backend synchronization. Do not assume the asset is credited
+  based only on local frontend variables; listen for on-chain confirmations or
+  refresh via an API.
 </Callout>
 
 ---

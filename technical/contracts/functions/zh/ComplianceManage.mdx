@@ -3,14 +3,17 @@ title: "ComplianceManage"
 description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单管理合约。提供 ECDSA 签名合规检查、独立黑名单存储、批量添加/移除操作以及细粒度的基于角色的访问控制等功能。"
 ---
 
-<Card title="源代码" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol">
+<Card
+  title="源代码"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol"
+>
   查看 ComplianceManage.sol 源码
 </Card>
 
 <Note>
-  **可升级性 (Upgradability)**
-  
-  该合约使用 `UUPSUpgradeable` 模式进行升级，并设计为在 ERC1967 代理后部署。
+  **可升级性 (Upgradability)** 该合约使用 `UUPSUpgradeable`
+  模式进行升级，并设计为在 ERC1967 代理后部署。
 </Note>
 
 ## 方法 (Methods)
@@ -28,6 +31,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="_initialOwner" type="address" required>
       初始所有者地址
     </ParamField>
+
   </Accordion>
 
   <Accordion title="isBlacklisted()" icon="ban">
@@ -46,6 +50,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ResponseField name="返回值" type="bool">
       如果地址在黑名单中则返回 `true`，否则返回 `false`。
     </ResponseField>
+
   </Accordion>
 
   <Accordion title="verifySignature()" icon="signature">
@@ -78,6 +83,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ResponseField name="返回值" type="bool">
       签名验证成功返回 `true`。
     </ResponseField>
+
   </Accordion>
 
   <Accordion title="setBlacklist()" icon="users">
@@ -95,6 +101,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="status" type="bool" required>
       黑名单状态（`true` 为添加，`false` 为移除）
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setBlacklistSingle()" icon="user">
@@ -112,6 +119,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="status" type="bool" required>
       黑名单状态
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setVerifiedToken()" icon="shield-check">
@@ -129,6 +137,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="status" type="bool" required>
       授权状态
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setSubAdmin()" icon="user-gear">
@@ -146,6 +155,7 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="_permissionLevel" type="uint8" required>
       权限级别
     </ParamField>
+
   </Accordion>
 
   <Accordion title="revokeSubAdmin()" icon="user-xmark">
@@ -160,5 +170,6 @@ description: "`ComplianceManage` 是 ArtStar 协议的独立合规和黑名单�
     <ParamField path="_wallet" type="address" required>
       子管理员钱包地址
     </ParamField>
+
   </Accordion>
 </AccordionGroup>

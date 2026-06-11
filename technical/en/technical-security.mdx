@@ -12,10 +12,10 @@ Built on mainstream public blockchain infrastructure, ArtStar tokenizes physical
 
 ArtStar uses the [ERC-20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) standard as the base protocol for asset tokenization.
 
-| Parameter        | Configuration Value           | Description                                                |
-| ---------------- | ----------------------------- | ---------------------------------------------------------- |
-| **Decimals**     | 18                            | High precision to support flexible fractional ownership    |
-| **Symbol**       | ARTS / asset-specific symbol  | Easy for market recognition and exchange listings          |
+| Parameter        | Configuration Value              | Description                                                   |
+| ---------------- | -------------------------------- | ------------------------------------------------------------- |
+| **Decimals**     | 18                               | High precision to support flexible fractional ownership       |
+| **Symbol**       | ARTS / asset-specific symbol     | Easy for market recognition and exchange listings             |
 | **Total Supply** | Anchored to physical asset value | Fixed in aggregate through the compliance management contract |
 
 ### Tokenization Workflow
@@ -39,10 +39,10 @@ ArtStar has built a complete on-chain compliance contract framework that deliver
 {/* ```solidity
 // Core compliance management interface
 interface IComplianceManage {
-    // Administrative actions
-    function setAssetController(address controller) external;
-    function pause() external;
-    function unpause() external;
+// Administrative actions
+function setAssetController(address controller) external;
+function pause() external;
+function unpause() external;
 
     // Compliance operations
     function addToWhitelist(address account) external returns (bool);
@@ -56,6 +56,7 @@ interface IComplianceManage {
     // Query interfaces
     function isWhitelisted(address account) external view returns (bool);
     function getComplianceStatus(address account) external view returns (ComplianceStatus);
+
 }
 ``` */}
 
@@ -87,25 +88,25 @@ function _verifySignature(
 
         return true;
     }
-```
+````
 
 ### Whitelist Management
 
-| Function             | Description                                                | Permission Requirement     |
-| -------------------- | ---------------------------------------------------------- | -------------------------- |
-| **Address Onboarding** | Add investor addresses that passed KYC to the whitelist  | Compliance administrator   |
-| **Batch Updates**    | Support batch addition or removal of blacklisted addresses | Compliance admin + multisig |
-| **Status Query**     | Query an address's compliance status in real time          | Public interface           |
-| **Automated Checks** | Automatically validate both counterparties during transfers | Inline contract logic      |
+| Function               | Description                                                 | Permission Requirement      |
+| ---------------------- | ----------------------------------------------------------- | --------------------------- |
+| **Address Onboarding** | Add investor addresses that passed KYC to the whitelist     | Compliance administrator    |
+| **Batch Updates**      | Support batch addition or removal of blacklisted addresses  | Compliance admin + multisig |
+| **Status Query**       | Query an address's compliance status in real time           | Public interface            |
+| **Automated Checks**   | Automatically validate both counterparties during transfers | Inline contract logic       |
 
 ### Compliance Parameters
 
-| Parameter                 | Configuration Item      | Description                                |
-| ------------------------- | ----------------------- | ------------------------------------------ |
-| **Investment Limits**     | Min/Max Investment      | USD limits for a single investment         |
-| **Raise Limits**          | Min/Max Raise           | Target fundraising range for an issuance round |
-| **Lock-Up Period**        | Lock Duration           | Vesting or holding period after token delivery |
-| **Transfer Restrictions** | Transfer Restrictions   | Transfers involving blacklisted addresses are prohibited |
+| Parameter                 | Configuration Item    | Description                                              |
+| ------------------------- | --------------------- | -------------------------------------------------------- |
+| **Investment Limits**     | Min/Max Investment    | USD limits for a single investment                       |
+| **Raise Limits**          | Min/Max Raise         | Target fundraising range for an issuance round           |
+| **Lock-Up Period**        | Lock Duration         | Vesting or holding period after token delivery           |
+| **Transfer Restrictions** | Transfer Restrictions | Transfers involving blacklisted addresses are prohibited |
 
 ## Blockchain Infrastructure
 
@@ -113,19 +114,19 @@ function _verifySignature(
 
 ArtStar selects BNB Chain as its primary deployment network and benefits from its mature infrastructure:
 
-| Chain                         | Role            | Key Characteristics                                 |
-| ----------------------------- | --------------- | --------------------------------------------------- |
-| **BSC (BNB Smart Chain)**     | Main network    | Scalable, low cost, secure, and production-ready    |
-| **opBNB**                     | Scaling layer   | Higher TPS and lower gas, suitable for high-frequency activity |
+| Chain                     | Role          | Key Characteristics                                            |
+| ------------------------- | ------------- | -------------------------------------------------------------- |
+| **BSC (BNB Smart Chain)** | Main network  | Scalable, low cost, secure, and production-ready               |
+| **opBNB**                 | Scaling layer | Higher TPS and lower gas, suitable for high-frequency activity |
 
 ### Chain Selection Considerations
 
-| Consideration     | BSC Advantage          | L2 Option                     |
-| ----------------- | ---------------------- | ----------------------------- |
-| **Gas Fees**      | Very low (about $0.05/tx) | Can be reduced by another 10x-100x |
-| **Transaction Speed** | ~3-second block time | Near-instant confirmation     |
-| **Ecosystem**     | Mature and tooling-rich | Rapidly evolving              |
-| **Use Cases**     | Standard trading and staking | High-frequency trading and small-ticket assets |
+| Consideration         | BSC Advantage                | L2 Option                                      |
+| --------------------- | ---------------------------- | ---------------------------------------------- |
+| **Gas Fees**          | Very low (about $0.05/tx)    | Can be reduced by another 10x-100x             |
+| **Transaction Speed** | ~3-second block time         | Near-instant confirmation                      |
+| **Ecosystem**         | Mature and tooling-rich      | Rapidly evolving                               |
+| **Use Cases**         | Standard trading and staking | High-frequency trading and small-ticket assets |
 
 ## Security Architecture
 
@@ -168,31 +169,31 @@ ArtStar smart contracts must go through the following security assurance process
 
 ### Multisignature Governance
 
-| Operation Type       | Signature Requirement | Description                                  |
-| -------------------- | --------------------- | -------------------------------------------- |
-| **Parameter Changes** | 2/3 multisig         | Update limits, lock-up duration, and similar parameters |
-| **Whitelist Management** | Single admin signature + logging | Day-to-day operational action         |
-| **Asset Migration**  | 3/5 multisig          | High-risk action requiring multiple approvals |
-| **Contract Upgrade** | Timelock + multisig   | Includes a 48-hour delay window              |
+| Operation Type           | Signature Requirement            | Description                                             |
+| ------------------------ | -------------------------------- | ------------------------------------------------------- |
+| **Parameter Changes**    | 2/3 multisig                     | Update limits, lock-up duration, and similar parameters |
+| **Whitelist Management** | Single admin signature + logging | Day-to-day operational action                           |
+| **Asset Migration**      | 3/5 multisig                     | High-risk action requiring multiple approvals           |
+| **Contract Upgrade**     | Timelock + multisig              | Includes a 48-hour delay window                         |
 
 ## Asset Custody Framework
 
 ### Physical Asset Custody
 
-| Custody Element        | Description                                      |
-| ---------------------- | ------------------------------------------------ |
-| **Custodian Qualification** | Licensed professional custody institution    |
-| **Physical Security**  | Professional vaults, fire and water protection, and surveillance |
-| **Insurance Coverage** | Adequate property insurance coverage             |
-| **Periodic Audit**     | Independent verification of the physical asset's existence |
+| Custody Element             | Description                                                      |
+| --------------------------- | ---------------------------------------------------------------- |
+| **Custodian Qualification** | Licensed professional custody institution                        |
+| **Physical Security**       | Professional vaults, fire and water protection, and surveillance |
+| **Insurance Coverage**      | Adequate property insurance coverage                             |
+| **Periodic Audit**          | Independent verification of the physical asset's existence       |
 
 ### Digital Asset Custody
 
-| Custody Method            | Technical Implementation | Applicable Scenario         |
-| ------------------------- | ------------------------ | --------------------------- |
-| **MPC Wallet**            | Private key sharding through multi-party computation | Institutional asset management |
-| **Hardware Security Module (HSM)** | Dedicated hardware security chip | High-security storage |
-| **Multisig Wallet**       | Joint control by multiple parties | Large-value asset operations |
+| Custody Method                     | Technical Implementation                             | Applicable Scenario            |
+| ---------------------------------- | ---------------------------------------------------- | ------------------------------ |
+| **MPC Wallet**                     | Private key sharding through multi-party computation | Institutional asset management |
+| **Hardware Security Module (HSM)** | Dedicated hardware security chip                     | High-security storage          |
+| **Multisig Wallet**                | Joint control by multiple parties                    | Large-value asset operations   |
 
 ## Compliance and Regulatory Framework
 
@@ -200,12 +201,12 @@ ArtStar smart contracts must go through the following security assurance process
 
 ArtStar aligns with the following international compliance standards:
 
-| Compliance Area   | Standard / Regulation        | Implementation Approach          |
-| ----------------- | ---------------------------- | -------------------------------- |
-| **KYC**           | FATF Recommendations         | Identity verification + address whitelisting |
-| **AML**           | Financial Action Task Force  | Transaction monitoring + suspicious activity reporting |
-| **Securities Compliance** | Hong Kong SFO / relevant jurisdictions | ERC-3643-compatible design |
-| **Data Protection** | GDPR / PDPO                | Minimal on-chain data + encrypted storage |
+| Compliance Area           | Standard / Regulation                  | Implementation Approach                                |
+| ------------------------- | -------------------------------------- | ------------------------------------------------------ |
+| **KYC**                   | FATF Recommendations                   | Identity verification + address whitelisting           |
+| **AML**                   | Financial Action Task Force            | Transaction monitoring + suspicious activity reporting |
+| **Securities Compliance** | Hong Kong SFO / relevant jurisdictions | ERC-3643-compatible design                             |
+| **Data Protection**       | GDPR / PDPO                            | Minimal on-chain data + encrypted storage              |
 
 ### Independent Regulatory Review
 
@@ -219,24 +220,24 @@ ArtStar aligns with the following international compliance standards:
 
 The ArtStar tokenization architecture is compatible with the following token standard evolution path:
 
-| Standard       | Type               | Applicable Scenario                  | Compliance Capability                           |
-| -------------- | ------------------ | ------------------------------------ | ----------------------------------------------- |
-| **ERC-20**     | Fungible token     | Current model for fractionalized art | Basic compliance through whitelist controls     |
-| **ERC-3643**   | Permissioned token | Scenarios with higher compliance requirements | Native KYC/AML and investor eligibility controls |
-| **ERC-1400**   | Security token     | Institutional-grade security tokenization | Partitioned transfers and attached legal documentation |
+| Standard     | Type               | Applicable Scenario                           | Compliance Capability                                  |
+| ------------ | ------------------ | --------------------------------------------- | ------------------------------------------------------ |
+| **ERC-20**   | Fungible token     | Current model for fractionalized art          | Basic compliance through whitelist controls            |
+| **ERC-3643** | Permissioned token | Scenarios with higher compliance requirements | Native KYC/AML and investor eligibility controls       |
+| **ERC-1400** | Security token     | Institutional-grade security tokenization     | Partitioned transfers and attached legal documentation |
 
 > **Evolution Strategy**: ArtStar adopts a modular design that can progressively upgrade token standards in response to regulatory requirements, enabling a smooth transition from ERC-20 to ERC-3643 or ERC-1400.
 
 ## Technology Stack Overview
 
-| Technical Component | Technology Choice               | Description                                |
-| ------------------- | ------------------------------- | ------------------------------------------ |
-| **Smart Contracts** | Solidity + Hardhat              | Mainstream general-purpose contract stack  |
-| **Frontend**        | Vite + React + TypeScript       | Modern Web3 application development        |
-| **Web3 Library**    | wagmi + viem                    | Consistent with ethers.js v6 best practices |
-| **Testing Framework** | Hardhat + Vitest              | Full-stack testing for contracts and components |
-| **Chain ID**        | BSC Mainnet: 56 / Testnet: 97   | Configured for the BSC network             |
-| **Identity**        | Supabase Auth / Privy           | Web3 identity with a familiar Web2-like user experience |
+| Technical Component   | Technology Choice             | Description                                             |
+| --------------------- | ----------------------------- | ------------------------------------------------------- |
+| **Smart Contracts**   | Solidity + Hardhat            | Mainstream general-purpose contract stack               |
+| **Frontend**          | Vite + React + TypeScript     | Modern Web3 application development                     |
+| **Web3 Library**      | wagmi + viem                  | Consistent with ethers.js v6 best practices             |
+| **Testing Framework** | Hardhat + Vitest              | Full-stack testing for contracts and components         |
+| **Chain ID**          | BSC Mainnet: 56 / Testnet: 97 | Configured for the BSC network                          |
+| **Identity**          | Supabase Auth / Privy         | Web3 identity with a familiar Web2-like user experience |
 
 ---
 

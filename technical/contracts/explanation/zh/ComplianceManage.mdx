@@ -3,7 +3,11 @@ title: "ComplianceManage"
 description: "ComplianceManage 是 ArtStar 合规体系的独立控制模块，负责把名单管理、签名授权、调用方校验和子管理员权限拆分成一个单独的可升级合约。"
 ---
 
-<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol">
+<Card
+  title="Source code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol"
+>
   查看 ComplianceManage 合约源码
 </Card>
 
@@ -47,25 +51,21 @@ description: "ComplianceManage 是 ArtStar 合规体系的独立控制模块，�
 </Tabs>
 
 关于架构组件：
+
 - **ERC-1967 与 UUPS**：通过 `UUPSUpgradeable` 运行在 `ERC-1967` 代理之上。升级授权由 `_authorizeUpgrade()` 决定。
 - **Initializable 与 OwnableUpgradeable**：由于是可升级实例，初始化必须通过 `initialize()` 完成。`OwnableUpgradeable` 提供最高治理权限。
-</Accordion>
+  </Accordion>
 
 <Accordion title="4. 权限模型与角色边界" icon="users">
 合约定义了三类主要角色：
 
 <Columns>
-  <Column>
-    **owner**
-    最高权限持有者，可设置或撤销子管理员，并控制升级。
-  </Column>
-  <Column>
-    **名单管理员**
-    `PERMISSION_LIST_MANAGER`，负责黑名单管理。
-  </Column>
+  <Column>**owner** 最高权限持有者，可设置或撤销子管理员，并控制升级。</Column>
+  <Column>**名单管理员** `PERMISSION_LIST_MANAGER`，负责黑名单管理。</Column>
   <Column>
     **签名管理员**
-    `PERMISSION_SIGNATURE_MANAGER`，负责签名授权相关操作，以及批准哪些 Token 合约可以调用签名校验。
+    `PERMISSION_SIGNATURE_MANAGER`，负责签名授权相关操作，以及批准哪些 Token
+    合约可以调用签名校验。
   </Column>
 </Columns>
 
@@ -78,14 +78,16 @@ description: "ComplianceManage 是 ArtStar 合规体系的独立控制模块，�
 黑名单通过 `mapping(address => bool) public blacklist` 保存。业务合约可以直接读取该映射，也可以通过 `isBlacklisted()` 做只读查询。
 
 当前提供两种更新方式：
+
 1. `setBlacklist(address[] calldata users, bool status)`：批量更新，单次最多 100 个地址。
 2. `setBlacklistSingle(address user, bool status)`：单地址更新。
 
 **设计要点：**
+
 - 批量接口限制最大长度，避免过大数组造成异常高 gas 消耗。
 - 只有状态真正发生变化时才写入并触发事件。
 - 零地址在单地址接口中会被拒绝，批量接口则会跳过零地址。
-</Accordion>
+  </Accordion>
 
 <Accordion title="6. 签名验证流程与防重放设计" icon="signature">
 `verifySignature()` 是关键业务入口，附带 `onlyVerifiedToken` 修饰器。典型流程如下：
@@ -117,6 +119,7 @@ description: "ComplianceManage 是 ArtStar 合规体系的独立控制模块，�
 - 是否允许某个业务合约消费签名，是一个单独的治理决策。
 
 这是“合规服务层”和“业务合约层”解耦的重要接口边界。
+
 </Accordion>
 
 <Accordion title="8. 子管理员配置模型" icon="user-gear">
@@ -131,6 +134,7 @@ struct SubAdmin {
 ```
 
 采用单一权限等级字段，而不是复杂的多布尔位授权表。更适合当前权限简单、职责清晰的场景。
+
 </Accordion>
 
 <Accordion title="9. 升级机制与存储兼容性" icon="arrow-up-right-dots">
@@ -142,15 +146,14 @@ function _authorizeUpgrade(address newImplementation) internal override onlyOwne
 
 - 代理壳合约本身不决定能否升级，最终由 owner 控制。
 - 新实现必须保持当前存储布局兼容。`uint256[50] private __gap;` 用于为未来新增变量预留空间，不是任意重排变量的许可证。
-</Accordion>
+  </Accordion>
 
 <Accordion title="10. 安全性分析与审计关注点" icon="shield-halved">
-审计时应重点关注：
-- 签名路径是否与链下签名服务完全一致，尤其是 `operation` 与 nonce 的编码顺序。
-- `verifiedTokens` 是否只包含被信任的业务合约。
-- 签名管理员与名单管理员的操作权限是否与运维流程一致。
-- owner 是否通过安全的多签或治理流程控制升级与管理员设置。
-- 升级后版本是否保持签名消息格式和 nonce 语义兼容。
+  审计时应重点关注： - 签名路径是否与链下签名服务完全一致，尤其是 `operation` 与
+  nonce 的编码顺序。 - `verifiedTokens` 是否只包含被信任的业务合约。 -
+  签名管理员与名单管理员的操作权限是否与运维流程一致。 - owner
+  是否通过安全的多签或治理流程控制升级与管理员设置。 -
+  升级后版本是否保持签名消息格式和 nonce 语义兼容。
 </Accordion>
 
 <Accordion title="11. 与 RWAToken 的交互关系" icon="handshake">
@@ -158,5 +161,5 @@ function _authorizeUpgrade(address newImplementation) internal override onlyOwne
 
 - **转账联动**：`RWAToken._update()` 直接查询 `blacklist` 映射，对黑名单地址的普通转账进行拒绝。
 - **认购联动**：`RWAToken.mint()` 调用 `verifySignature()`，要求买家先通过签名授权，随后才能完成 `USDT` 支付和代币铸造。
-</Accordion>
+  </Accordion>
 </AccordionGroup>

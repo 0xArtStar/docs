@@ -3,7 +3,11 @@ title: "RWAToken"
 description: "RWAToken is the core asset contract in ArtStar’s RWA issuance system. It manages primary sales, compliance checks, blacklist restrictions, time-locked transfers, asset disclosures, and upgradeability."
 ---
 
-<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol">
+<Card
+  title="Source code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol"
+>
   View RWAToken contract source code
 </Card>
 
@@ -13,18 +17,19 @@ description: "RWAToken is the core asset contract in ArtStar’s RWA issuance sy
 
 - As the on-chain tokenized representation of RWA units, tracking balances, transfers, and burns.
 - As the primary-sale entrypoint, receiving `USDT` during a sale window and minting tokens to buyers according to predefined rules.
-</Accordion>
+  </Accordion>
 
 <Accordion title="2. Responsibilities and Business Goals" icon="bullseye">
 This contract targets controlled issuance for RWA use cases. The design emphasizes “issuable, restrictable, recoverable, and upgradable”.
 
 Core responsibilities include:
+
 - Binding token metadata, custody wallet, `USDT` address, and the compliance module during initialization.
 - Managing supply under a fixed hard cap and minting the reserved tranche to `custodyWallet` at deployment time.
 - Handling primary sales via `mint()`. Before paying `USDT`, a buyer must pass off-chain compliance authorization verification via a signature.
 - Integrating with `ComplianceManage` on transfer paths to restrict blacklisted addresses.
 - Providing administrative capabilities for operations and compliance handling, such as forced transfers, token recovery, and transfer lock updates.
-</Accordion>
+  </Accordion>
 
 <Accordion title="3. Architecture Positioning and External Dependencies" icon="network-wired">
 `RWAToken` depends on the following external components:
@@ -34,27 +39,38 @@ Core responsibilities include:
 - **`ArtStarERC1967Proxy`**: the proxy contract that holds state for the upgradeable deployment.
 
 With Hardhat Ignition, the implementation contract is deployed first, then the proxy is created and initialized by passing the ABI-encoded `initialize()` calldata. After that, the proxy address is registered in `ComplianceManage` under `verifiedTokens`.
+
 </Accordion>
 
 <Accordion title="4. Standards, EIPs, and Base Components" icon="cube">
-<Tabs>
-  <Tab title="ERC-20 & SafeERC20">
-    The contract keeps the standard token interface, while layering additional business restrictions on transfer and mint paths. It uses `SafeERC20` to wrap `transferFrom` and `transfer` calls for more robust interactions and reduced integration risk.
-  </Tab>
-  <Tab title="ERC-1967 & UUPS">
-    `ERC-1967` defines the storage slot conventions used by proxy contracts. This project uses the `UUPSUpgradeable` pattern, placing the upgrade entrypoint and authorization logic in the implementation contract, with `_authorizeUpgrade()` determining upgrade permissions.
-  </Tab>
-  <Tab title="Governance and Pausing">
-    - `Initializable`: prevents accidental initialization of the implementation contract.
-    - `OwnableUpgradeable`: a single-admin governance model, with authority concentrated in the owner.
-    - `PausableUpgradeable`: emergency pause capability affecting both primary sales and secondary transfers.
-  </Tab>
-  <Tab title="Security and Math">
-    - `ReentrancyGuardTransient`: additional reentrancy protection for `mint()`.
-    - `Math.mulDiv`: precise conversion between `USDT` amounts and 18-decimal token amounts.
-    - `__gap`: reserved storage slots for future state variables, reducing the risk of breaking storage layout compatibility.
-  </Tab>
-</Tabs>
+  <Tabs>
+    <Tab title="ERC-20 & SafeERC20">
+      The contract keeps the standard token interface, while layering additional
+      business restrictions on transfer and mint paths. It uses `SafeERC20` to
+      wrap `transferFrom` and `transfer` calls for more robust interactions and
+      reduced integration risk.
+    </Tab>
+    <Tab title="ERC-1967 & UUPS">
+      `ERC-1967` defines the storage slot conventions used by proxy contracts.
+      This project uses the `UUPSUpgradeable` pattern, placing the upgrade
+      entrypoint and authorization logic in the implementation contract, with
+      `_authorizeUpgrade()` determining upgrade permissions.
+    </Tab>
+    <Tab title="Governance and Pausing">
+      - `Initializable`: prevents accidental initialization of the
+      implementation contract. - `OwnableUpgradeable`: a single-admin governance
+      model, with authority concentrated in the owner. - `PausableUpgradeable`:
+      emergency pause capability affecting both primary sales and secondary
+      transfers.
+    </Tab>
+    <Tab title="Security and Math">
+      - `ReentrancyGuardTransient`: additional reentrancy protection for
+      `mint()`. - `Math.mulDiv`: precise conversion between `USDT` amounts and
+      18-decimal token amounts. - `__gap`: reserved storage slots for future
+      state variables, reducing the risk of breaking storage layout
+      compatibility.
+    </Tab>
+  </Tabs>
 </Accordion>
 
 <Accordion title="5. State Variables and Core Invariants" icon="database">
@@ -66,22 +82,25 @@ The contract state is organized around three core invariants:
 The 2,000,000 reserved tokens are minted to `custodyWallet` during initialization, leaving 8,000,000 as the maximum available amount for primary sales.
 
 Other key state variables:
+
 - `sold`: total amount sold via primary sales.
 - `priceUSDT` / `minPurchaseUSDT` / `maxPurchaseUSDT`: pricing and per-purchase bounds.
 - `saleActive` / `saleStartTime` / `saleEndTime`: sale switch and time window.
 - `unlockTime`: transfer unlock time; `0` means no lock.
 - `assetInfo`: underlying asset metadata URI, valuation, and the last valuation update timestamp.
-</Accordion>
+  </Accordion>
 
 <Accordion title="6. Initialization and Deployment" icon="play">
 `initialize()` takes the token name and symbol, initial owner, `custodyWallet`, `USDT` address, and `ComplianceManage` address.
 
 The flow includes:
+
 1. Calling an internal `init` function.
 2. Validating that external dependency addresses are non-zero and persisting references.
 3. Minting `RESERVED_AMOUNT` directly to `custodyWallet`.
 
 The address exposed to users on-chain is the proxy address.
+
 </Accordion>
 
 <Accordion title="7. Primary Sale Flow" icon="cart-shopping">
@@ -89,16 +108,19 @@ A typical primary subscription flow looks like this:
 
 <Steps>
   <Step title="Operational configuration">
-    The owner sets price and purchase bounds, configures the sale window, and calls `startSale()`.
+    The owner sets price and purchase bounds, configures the sale window, and
+    calls `startSale()`.
   </Step>
   <Step title="Buyer subscription">
     The buyer submits `amountUSDT`, a signature, and an expiration timestamp.
   </Step>
   <Step title="Compliance verification">
-    The contract checks the sale window, per-transaction limits, and the hard cap, then verifies the buyer’s authorization via `ComplianceManage`.
+    The contract checks the sale window, per-transaction limits, and the hard
+    cap, then verifies the buyer’s authorization via `ComplianceManage`.
   </Step>
   <Step title="Payment and minting">
-    After verification, `USDT` is transferred from the buyer to `custodyWallet`. The contract updates state and mints tokens to the buyer.
+    After verification, `USDT` is transferred from the buyer to `custodyWallet`.
+    The contract updates state and mints tokens to the buyer.
   </Step>
 </Steps>
 
@@ -113,7 +135,7 @@ By overriding `_update()`, the contract centralizes multiple constraints at the 
 - **Pause constraint**: when paused, both regular transfers and primary sales (`mint`) are rejected.
 - **Lockup constraint**: when `unlockTime != 0` and the unlock time has not been reached, regular transfers are rejected.
 - **Blacklist constraint**: when the sender or recipient is blacklisted in `ComplianceManage`, regular transfers are rejected.
-</Accordion>
+  </Accordion>
 
 <Accordion title="9. Admin Capabilities and Operational Controls" icon="user-tie">
 The owner holds significant operational privileges, including:
@@ -132,10 +154,11 @@ These capabilities improve operational flexibility, but also indicate explicit g
 `assetInfo` stores the underlying asset’s `metadataURI` and valuation data. Valuation accuracy depends entirely on owner updates.
 
 Recovery-focused functions reflect real-world operations:
+
 - `recoverTokens()`: recover any `ERC-20` mistakenly sent to the contract.
 - `recoverUnsoldTokens()`: after the sale ends, mint the remaining sale capacity to the custody wallet in one action.
 - `forcedTransfer()`: forcibly move tokens for compliance or dispute-resolution scenarios.
-</Accordion>
+  </Accordion>
 
 <Accordion title="11. Upgrade Mechanism and Security Considerations" icon="shield">
 <Columns>

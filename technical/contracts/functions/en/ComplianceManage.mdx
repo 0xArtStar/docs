@@ -3,14 +3,17 @@ title: "ComplianceManage"
 description: "`ComplianceManage` is the standalone compliance and blacklist management contract in the ArtStar protocol. It provides ECDSA signature-based compliance checks, dedicated blacklist storage, batch add/remove operations, and fine-grained role-based access control."
 ---
 
-<Card title="Source Code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol">
+<Card
+  title="Source Code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol"
+>
   View the ComplianceManage.sol source code
 </Card>
 
 <Note>
-  **Upgradability**
-  
-  This contract uses the `UUPSUpgradeable` pattern and is designed to be deployed behind an ERC1967 proxy.
+  **Upgradability** This contract uses the `UUPSUpgradeable` pattern and is
+  designed to be deployed behind an ERC1967 proxy.
 </Note>
 
 ## Methods
@@ -28,6 +31,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="_initialOwner" type="address" required>
       Initial owner address
     </ParamField>
+
   </Accordion>
 
   <Accordion title="isBlacklisted()" icon="ban">
@@ -46,6 +50,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ResponseField name="Returns" type="bool">
       Returns `true` if the address is blacklisted; otherwise returns `false`.
     </ResponseField>
+
   </Accordion>
 
   <Accordion title="verifySignature()" icon="signature">
@@ -78,6 +83,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ResponseField name="Returns" type="bool">
       Returns `true` when signature verification succeeds.
     </ResponseField>
+
   </Accordion>
 
   <Accordion title="setBlacklist()" icon="users">
@@ -95,6 +101,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="status" type="bool" required>
       Blacklist status (`true` to add, `false` to remove)
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setBlacklistSingle()" icon="user">
@@ -112,6 +119,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="status" type="bool" required>
       Blacklist status
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setVerifiedToken()" icon="shield-check">
@@ -129,6 +137,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="status" type="bool" required>
       Authorization status
     </ParamField>
+
   </Accordion>
 
   <Accordion title="setSubAdmin()" icon="user-gear">
@@ -146,6 +155,7 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="_permissionLevel" type="uint8" required>
       Permission level
     </ParamField>
+
   </Accordion>
 
   <Accordion title="revokeSubAdmin()" icon="user-xmark">
@@ -160,5 +170,6 @@ description: "`ComplianceManage` is the standalone compliance and blacklist mana
     <ParamField path="_wallet" type="address" required>
       Sub-admin wallet address
     </ParamField>
+
   </Accordion>
 </AccordionGroup>

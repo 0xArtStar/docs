@@ -3,14 +3,19 @@ title: "RWAToken"
 description: "`RWAToken` is the core real-world asset (RWA) token contract in the ArtStar protocol, with comprehensive compliance controls and primary market sale management. It supports primary sales settled in USDT, signature-based compliance checks, purchase limits, and time-bounded sale windows."
 ---
 
-<Card title="Source Code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol">
+<Card
+  title="Source Code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol"
+>
   View the RWAToken.sol source code
 </Card>
 
 <Note>
   **Upgradability**
 
-  This contract uses the `UUPSUpgradeable` pattern and inherits from `ERC20Upgradeable`, `OwnableUpgradeable`, and `PausableUpgradeable`.
+This contract uses the `UUPSUpgradeable` pattern and inherits from `ERC20Upgradeable`, `OwnableUpgradeable`, and `PausableUpgradeable`.
+
 </Note>
 
 ## Methods
@@ -38,6 +43,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     <ParamField path="_custodyWallet" type="address" required>Custody wallet</ParamField>
     <ParamField path="_usdt" type="address" required>USDT contract address</ParamField>
     <ParamField path="_complianceManage" type="address" required>Compliance manager address</ParamField>
+
   </Accordion>
 
   <Accordion title="configureSale()" icon="gear">
@@ -56,6 +62,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     <ParamField path="_priceUSDT" type="uint256" required>Token price in USDT</ParamField>
     <ParamField path="_minPurchaseUSDT" type="uint256" required>Minimum purchase amount in USDT</ParamField>
     <ParamField path="_maxPurchaseUSDT" type="uint256" required>Maximum purchase amount in USDT</ParamField>
+
   </Accordion>
 
   <Accordion title="configureSaleTime()" icon="clock">
@@ -69,6 +76,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
 
     <ParamField path="_startTime" type="uint256" required>Start timestamp</ParamField>
     <ParamField path="_endTime" type="uint256" required>End timestamp</ParamField>
+
   </Accordion>
 
   <Accordion title="startSale()" icon="play">
@@ -79,6 +87,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function startSale() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="pauseSale()" icon="pause">
@@ -89,6 +98,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function pauseSale() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="setUnlockTime()" icon="lock-open">
@@ -101,6 +111,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     </CodeGroup>
 
     <ParamField path="_unlockTime" type="uint256" required>Unlock timestamp</ParamField>
+
   </Accordion>
 
   <Accordion title="emergencyUnlock()" icon="triangle-exclamation">
@@ -111,6 +122,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function emergencyUnlock() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="pause()" icon="circle-pause">
@@ -121,6 +133,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function pause() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="unpause()" icon="circle-play">
@@ -131,6 +144,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function unpause() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="setCustodyWallet()" icon="wallet">
@@ -143,6 +157,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     </CodeGroup>
 
     <ParamField path="_custodyWallet" type="address" required>New custody wallet address</ParamField>
+
   </Accordion>
 
   <Accordion title="recoverUnsoldTokens()" icon="rotate-left">
@@ -153,6 +168,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     function recoverUnsoldTokens() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="recoverTokens()" icon="life-ring">
@@ -165,6 +181,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     </CodeGroup>
 
     <ParamField path="token" type="address" required>Token contract address to recover</ParamField>
+
   </Accordion>
 
   <Accordion title="forcedTransfer()" icon="shuffle">
@@ -185,6 +202,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     <ParamField path="to" type="address" required>Recipient address</ParamField>
     <ParamField path="amount" type="uint256" required>Transfer amount</ParamField>
     <ParamField path="reason" type="string" required>Reason for the transfer</ParamField>
+
   </Accordion>
 
   <Accordion title="updateAssetInfo()" icon="file-invoice">
@@ -198,6 +216,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
 
     <ParamField path="_metadataURI" type="string" required>Metadata URI</ParamField>
     <ParamField path="_valuation" type="uint256" required>Valuation</ParamField>
+
   </Accordion>
 
   <Accordion title="mint()" icon="coins">
@@ -216,6 +235,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     <ParamField path="amountUSDT" type="uint256" required>Amount of USDT paid</ParamField>
     <ParamField path="signature" type="bytes" required>Compliance signature payload</ParamField>
     <ParamField path="expireTime" type="uint256" required>Signature expiration time</ParamField>
+
   </Accordion>
 
   <Accordion title="burn()" icon="fire">
@@ -229,6 +249,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
 
     <ParamField path="from" type="address" required>Address whose tokens will be burned</ParamField>
     <ParamField path="amount" type="uint256" required>Amount to burn</ParamField>
+
   </Accordion>
 
   <Accordion title="remainingForSale()" icon="calculator">
@@ -241,6 +262,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
     </CodeGroup>
 
     <ResponseField name="Returns" type="uint256">Remaining number of tokens available for sale</ResponseField>
+
   </Accordion>
 
   <Accordion title="usdtToTokenAmount()" icon="money-bill-transfer">
@@ -254,6 +276,7 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
 
     <ParamField path="amountUSDT" type="uint256" required>USDT amount</ParamField>
     <ResponseField name="Returns" type="uint256">Equivalent token amount</ResponseField>
+
   </Accordion>
 
   <Accordion title="tokenToUSDTAmount()" icon="money-bill-transfer">
@@ -267,5 +290,6 @@ description: "`RWAToken` is the core real-world asset (RWA) token contract in th
 
     <ParamField path="tokenAmount" type="uint256" required>Token amount</ParamField>
     <ResponseField name="Returns" type="uint256">Required USDT amount</ResponseField>
+
   </Accordion>
 </AccordionGroup>

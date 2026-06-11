@@ -18,32 +18,28 @@ This is neither a pure DApp nor a traditional Web2 platform. It is a hybrid arch
 <Columns>
   <Column>
     <Card title="Frontend Interaction Layer" icon="desktop">
-      Organizes complex on-chain and backend states into user-understandable product flows
-      * Present projects, assets, and market information
-      * Handle wallet connection and signature-based login
-      * Guide KYC processes and status
-      * Initiate on-chain approvals and subscription transactions
-      * Display user assets and activity data
+      Organizes complex on-chain and backend states into user-understandable
+      product flows * Present projects, assets, and market information * Handle
+      wallet connection and signature-based login * Guide KYC processes and
+      status * Initiate on-chain approvals and subscription transactions *
+      Display user assets and activity data
     </Card>
   </Column>
   <Column>
     <Card title="Backend Service Layer" icon="server">
-      Responsible for “state aggregation” and “business orchestration,” complementing on-chain capabilities
-      * Manage user profiles and sessions
-      * Handle asynchronous KYC callbacks
-      * Aggregate referrals, commissions, and points ledgers
-      * Sync and index on-chain events
-      * Provide query APIs for the frontend
+      Responsible for “state aggregation” and “business orchestration,”
+      complementing on-chain capabilities * Manage user profiles and sessions *
+      Handle asynchronous KYC callbacks * Aggregate referrals, commissions, and
+      points ledgers * Sync and index on-chain events * Provide query APIs for
+      the frontend
     </Card>
   </Column>
   <Column>
     <Card title="On-Chain Execution Layer" icon="link">
-      Executes the platform’s most critical trust logic and asset settlement
-      * Stablecoin approvals and debits
-      * Minting fractionalized ownership tokens
-      * Sale status and whitelist control
-      * Liquidity pool initialization
-      * Serve as the final source of truth for asset state
+      Executes the platform’s most critical trust logic and asset settlement *
+      Stablecoin approvals and debits * Minting fractionalized ownership tokens
+      * Sale status and whitelist control * Liquidity pool initialization *
+      Serve as the final source of truth for asset state
     </Card>
   </Column>
 </Columns>
@@ -53,31 +49,55 @@ This is neither a pure DApp nor a traditional Web2 platform. It is a hybrid arch
 A typical subscription flow goes through the following full interaction chain:
 
 <Steps>
-  <Step title="Wallet connection">The user connects a wallet in the frontend</Step>
-  <Step title="Authentication">The frontend initiates signature-based login and obtains a backend session</Step>
-  <Step title="State aggregation">The frontend reads KYC status, whitelist status, and sale status</Step>
+  <Step title="Wallet connection">
+    The user connects a wallet in the frontend
+  </Step>
+  <Step title="Authentication">
+    The frontend initiates signature-based login and obtains a backend session
+  </Step>
+  <Step title="State aggregation">
+    The frontend reads KYC status, whitelist status, and sale status
+  </Step>
   <Step title="Approval">The user completes stablecoin approval (Approve)</Step>
-  <Step title="Purchase execution">The user submits a subscription (Mint / Purchase) transaction</Step>
-  <Step title="On-chain sync">After confirmation, events are asynchronously synced to the backend for parsing and recording</Step>
-  <Step title="UI refresh">The frontend refreshes the UI based on on-chain results and backend aggregated data</Step>
+  <Step title="Purchase execution">
+    The user submits a subscription (Mint / Purchase) transaction
+  </Step>
+  <Step title="On-chain sync">
+    After confirmation, events are asynchronously synced to the backend for
+    parsing and recording
+  </Step>
+  <Step title="UI refresh">
+    The frontend refreshes the UI based on on-chain results and backend
+    aggregated data
+  </Step>
 </Steps>
 
 ## Architecture Principles
 
-<Callout type="warning" title="The frontend must not be the final source of truth">
-  The frontend may cache and display state, but the source of truth must come from smart contracts and the backend database, not local memory
+<Callout
+  type="warning"
+  title="The frontend must not be the final source of truth"
+>
+  The frontend may cache and display state, but the source of truth must come
+  from smart contracts and the backend database, not local memory
 </Callout>
 
-<Callout type="danger" title="The backend aggregates, but must not override on-chain conclusions">
-  The backend can enhance queries and validation, but it must not replace on-chain finality for asset behaviors
+<Callout
+  type="danger"
+  title="The backend aggregates, but must not override on-chain conclusions"
+>
+  The backend can enhance queries and validation, but it must not replace
+  on-chain finality for asset behaviors
 </Callout>
 
 <Callout type="info" title="Compliance must be enforced early">
-  KYC, whitelisting, and network checks should be completed before the user submits a transaction to reduce failed transactions and wasted effort
+  KYC, whitelisting, and network checks should be completed before the user
+  submits a transaction to reduce failed transactions and wasted effort
 </Callout>
 
 <Callout type="check" title="Synchronization must be traceable">
-  Whether it is purchase records, KYC status, commission outcomes, or points changes, everything must be queryable, reconcilable, and explainable
+  Whether it is purchase records, KYC status, commission outcomes, or points
+  changes, everything must be queryable, reconcilable, and explainable
 </Callout>
 
 ---

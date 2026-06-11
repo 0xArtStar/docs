@@ -3,7 +3,11 @@ title: "ComplianceManage"
 description: "ComplianceManage is ArtStar’s standalone compliance control module. It separates list management, signature authorization, caller restrictions, and sub-admin permissions into an independently upgradeable contract."
 ---
 
-<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol">
+<Card
+  title="Source code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/ComplianceManage.sol"
+>
   View ComplianceManage contract source code
 </Card>
 
@@ -47,25 +51,27 @@ The current compliance model is not a pure whitelist. It combines three mechanis
 </Tabs>
 
 Architecture components:
+
 - **ERC-1967 and UUPS**: runs behind an `ERC-1967` proxy using `UUPSUpgradeable`. Upgrade authorization is controlled by `_authorizeUpgrade()`.
 - **Initializable and OwnableUpgradeable**: as an upgradeable instance, initialization must be done via `initialize()`. `OwnableUpgradeable` provides top-level governance control.
-</Accordion>
+  </Accordion>
 
 <Accordion title="4. Permission Model and Role Boundaries" icon="users">
 The contract defines three primary roles:
 
 <Columns>
   <Column>
-    **Owner**
-    The highest-privilege role. Can set or revoke sub-admins and controls upgrades.
+    **Owner** The highest-privilege role. Can set or revoke sub-admins and
+    controls upgrades.
   </Column>
   <Column>
-    **List manager**
-    `PERMISSION_LIST_MANAGER`, responsible for blacklist management.
+    **List manager** `PERMISSION_LIST_MANAGER`, responsible for blacklist
+    management.
   </Column>
   <Column>
-    **Signature manager**
-    `PERMISSION_SIGNATURE_MANAGER`, responsible for signature authorization operations and approving which token contracts can call signature verification.
+    **Signature manager** `PERMISSION_SIGNATURE_MANAGER`, responsible for
+    signature authorization operations and approving which token contracts can
+    call signature verification.
   </Column>
 </Columns>
 
@@ -78,14 +84,16 @@ This separation reduces blast radius if a hot wallet is compromised or misused. 
 The blacklist is stored as `mapping(address => bool) public blacklist`. Business contracts can read the mapping directly or query via `isBlacklisted()` (read-only).
 
 Two update methods are provided:
+
 1. `setBlacklist(address[] calldata users, bool status)`: batch updates, up to 100 addresses per call.
 2. `setBlacklistSingle(address user, bool status)`: single-address update.
 
 **Design notes:**
+
 - The batch interface caps length to avoid extreme gas usage from oversized arrays.
 - State is written and events are emitted only when the status actually changes.
 - The zero address is rejected in the single-address function; in the batch function it is skipped.
-</Accordion>
+  </Accordion>
 
 <Accordion title="6. Signature Verification Flow and Replay Protection" icon="signature">
 `verifySignature()` is the key business entrypoint and is protected by `onlyVerifiedToken`. A typical flow is:
@@ -117,6 +125,7 @@ The `verifiedTokens` mapping restricts which business contracts can call `verify
 - Allowing a business contract to consume signatures is an independent governance decision.
 
 This is a key boundary that decouples the “compliance service layer” from the “business contract layer”.
+
 </Accordion>
 
 <Accordion title="8. Sub-admin Configuration Model" icon="user-gear">
@@ -131,6 +140,7 @@ struct SubAdmin {
 ```
 
 This uses a single permission-level field rather than a complex bitmask/boolean authorization table, which fits the current scope where roles are simple and responsibilities are clearly separated.
+
 </Accordion>
 
 <Accordion title="9. Upgrade Mechanism and Storage Compatibility" icon="arrow-up-right-dots">
@@ -142,15 +152,16 @@ function _authorizeUpgrade(address newImplementation) internal override onlyOwne
 
 - The proxy shell does not decide who can upgrade; the owner ultimately controls it.
 - New implementations must preserve storage layout compatibility. `uint256[50] private __gap;` reserves space for future variables, but it does not permit arbitrary reordering of state variables.
-</Accordion>
+  </Accordion>
 
 <Accordion title="10. Security Analysis and Audit Focus" icon="shield-halved">
-Audit focus should include:
-- Whether the signature path matches the off-chain signing service exactly, especially the encoding order of `operation` and nonce.
-- Whether `verifiedTokens` contains only trusted business contracts.
-- Whether signature-manager and list-manager privileges align with the operational process.
-- Whether the owner role is controlled via a secure multisig or governance process for upgrades and admin management.
-- Whether future upgrades keep the message format and nonce semantics compatible.
+  Audit focus should include: - Whether the signature path matches the off-chain
+  signing service exactly, especially the encoding order of `operation` and
+  nonce. - Whether `verifiedTokens` contains only trusted business contracts. -
+  Whether signature-manager and list-manager privileges align with the
+  operational process. - Whether the owner role is controlled via a secure
+  multisig or governance process for upgrades and admin management. - Whether
+  future upgrades keep the message format and nonce semantics compatible.
 </Accordion>
 
 <Accordion title="11. Interaction with RWAToken" icon="handshake">
@@ -158,5 +169,5 @@ Audit focus should include:
 
 - **Transfer integration**: `RWAToken._update()` queries the `blacklist` mapping directly to reject transfers involving blacklisted addresses.
 - **Subscription integration**: `RWAToken.mint()` calls `verifySignature()`, requiring buyers to pass signature authorization before `USDT` payment and token minting can proceed.
-</Accordion>
+  </Accordion>
 </AccordionGroup>

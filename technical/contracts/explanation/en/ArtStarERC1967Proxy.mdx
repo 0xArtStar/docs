@@ -3,7 +3,11 @@ title: "ArtStarERC1967Proxy"
 description: "ArtStarERC1967Proxy is the proxy shell contract in the ArtStar contract system. Its source code is extremely small—essentially a thin wrapper around OpenZeppelin’s ERC1967Proxy—yet it plays a critical role in the upgrade architecture."
 ---
 
-<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol">
+<Card
+  title="Source code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol"
+>
   View ArtStarERC1967Proxy contract source code
 </Card>
 
@@ -19,10 +23,11 @@ The on-chain state is not held by the `RWAToken` or `ComplianceManage` implement
 - A stable, explicit, and reusable proxy entrypoint for the Hardhat Ignition deployment flow.
 
 From a deployment and runtime perspective, it determines key facts:
+
 - Users typically interact with the proxy address, not the implementation address.
 - The implementation can be replaced, while the proxy address and proxy state are preserved.
 - Initialization is not performed in the implementation constructor. It is executed once during proxy deployment via the `data` parameter.
-</Accordion>
+  </Accordion>
 
 <Accordion title="3. ERC-1967 Standard" icon="book">
 `ERC-1967` is a key standard for proxy patterns. It defines fixed storage slots for metadata such as the implementation address. Standardizing these slots provides:
@@ -32,6 +37,7 @@ From a deployment and runtime perspective, it determines key facts:
 - Upgrades and deployments that follow common industry conventions instead of project-specific layouts.
 
 ArtStar reuses OpenZeppelin’s `ERC1967Proxy` implementation directly, and OpenZeppelin maintains the standardized slot definitions.
+
 </Accordion>
 
 <Accordion title="4. UUPS Proxy Pattern" icon="arrows-rotate">
@@ -42,11 +48,13 @@ This project adopts the **UUPS upgrade pattern**, not the transparent proxy patt
     Upgrade management capabilities are typically implemented on the proxy side.
   </Tab>
   <Tab title="UUPS">
-    The upgrade entrypoint and authorization logic are implemented on the implementation side.
+    The upgrade entrypoint and authorization logic are implemented on the
+    implementation side.
   </Tab>
 </Tabs>
 
 As a result, `ArtStarERC1967Proxy` does not contain an upgrade authorization strategy. The “who can upgrade” decision is enforced by `_authorizeUpgrade()` in the current implementation:
+
 - `RWAToken` gates upgrades via `onlyOwner`.
 - `ComplianceManage` also gates upgrades via `onlyOwner`.
 
@@ -89,6 +97,7 @@ The proxy constructor takes two parameters:
 2. `data`: calldata that is delegate-called immediately after deployment to initialize state.
 
 Together they accomplish “deploy proxy + initialize business state” in one step, reducing the high-risk scenario where a contract is deployed but left uninitialized.
+
 </Accordion>
 
 <Accordion title="7. Relationship with Ignition Deployment Modules" icon="fire">
@@ -98,6 +107,7 @@ Ignition uses this proxy in a straightforward way:
 - `RWAToken`: deploy the implementation, then pass encoded `initialize(...)` (name, symbol, and other parameters) as `data` when deploying the proxy (mapped as `RWATokenProxy`).
 
 The deployment script continues to call business functions on the proxy instance afterward. This shows the proxy is not a temporary deployment artifact—it is the formal runtime entrypoint for the system.
+
 </Accordion>
 
 <Accordion title="8. Responsibility Boundary vs. Implementations" icon="shield">
@@ -141,5 +151,6 @@ This proxy touches three high-risk topics:
 - How deployment scripts initialize a proxy in one step to make the business system usable.
 
 Without a dedicated explanation, readers are likely to misinterpret the architecture. Even as a thin wrapper, it still warrants explicit documentation.
+
 </Accordion>
 </AccordionGroup>

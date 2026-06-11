@@ -3,14 +3,19 @@ title: "RWAToken"
 description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代币合约，具备全面的合规性和一级市场销售控制。它支持使用 USDT 进行一级销售、基于签名的合规检查、购买限制以及有时间限制的销售。"
 ---
 
-<Card title="源代码" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol">
+<Card
+  title="源代码"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/RWAToken.sol"
+>
   查看 RWAToken.sol 源码
 </Card>
 
 <Note>
   **可升级性 (Upgradability)**
 
-  该合约使用 `UUPSUpgradeable` 模式进行升级，并继承了 `ERC20Upgradeable`、`OwnableUpgradeable` 和 `PausableUpgradeable`。
+该合约使用 `UUPSUpgradeable` 模式进行升级，并继承了 `ERC20Upgradeable`、`OwnableUpgradeable` 和 `PausableUpgradeable`。
+
 </Note>
 
 ## 方法 (Methods)
@@ -38,6 +43,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     <ParamField path="_custodyWallet" type="address" required>托管钱包</ParamField>
     <ParamField path="_usdt" type="address" required>USDT 合约地址</ParamField>
     <ParamField path="_complianceManage" type="address" required>合规管理器地址</ParamField>
+
   </Accordion>
 
   <Accordion title="configureSale()" icon="gear">
@@ -52,10 +58,11 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     ) external;
     ```
     </CodeGroup>
-    
+
     <ParamField path="_priceUSDT" type="uint256" required>代币 USDT 价格</ParamField>
     <ParamField path="_minPurchaseUSDT" type="uint256" required>最小购买 USDT 金额</ParamField>
     <ParamField path="_maxPurchaseUSDT" type="uint256" required>最大购买 USDT 金额</ParamField>
+
   </Accordion>
 
   <Accordion title="configureSaleTime()" icon="clock">
@@ -69,6 +76,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
 
     <ParamField path="_startTime" type="uint256" required>开始时间戳</ParamField>
     <ParamField path="_endTime" type="uint256" required>结束时间戳</ParamField>
+
   </Accordion>
 
   <Accordion title="startSale()" icon="play">
@@ -79,6 +87,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function startSale() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="pauseSale()" icon="pause">
@@ -89,6 +98,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function pauseSale() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="setUnlockTime()" icon="lock-open">
@@ -101,6 +111,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     </CodeGroup>
 
     <ParamField path="_unlockTime" type="uint256" required>解锁时间戳</ParamField>
+
   </Accordion>
 
   <Accordion title="emergencyUnlock()" icon="triangle-exclamation">
@@ -111,6 +122,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function emergencyUnlock() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="pause()" icon="circle-pause">
@@ -121,6 +133,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function pause() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="unpause()" icon="circle-play">
@@ -131,6 +144,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function unpause() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="setCustodyWallet()" icon="wallet">
@@ -143,6 +157,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     </CodeGroup>
 
     <ParamField path="_custodyWallet" type="address" required>新的托管钱包地址</ParamField>
+
   </Accordion>
 
   <Accordion title="recoverUnsoldTokens()" icon="rotate-left">
@@ -153,6 +168,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     function recoverUnsoldTokens() external;
     ```
     </CodeGroup>
+
   </Accordion>
 
   <Accordion title="recoverTokens()" icon="life-ring">
@@ -165,6 +181,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     </CodeGroup>
 
     <ParamField path="token" type="address" required>要恢复的代币合约地址</ParamField>
+
   </Accordion>
 
   <Accordion title="forcedTransfer()" icon="shuffle">
@@ -185,6 +202,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     <ParamField path="to" type="address" required>接收方地址</ParamField>
     <ParamField path="amount" type="uint256" required>转移数量</ParamField>
     <ParamField path="reason" type="string" required>转移原因描述</ParamField>
+
   </Accordion>
 
   <Accordion title="updateAssetInfo()" icon="file-invoice">
@@ -198,6 +216,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
 
     <ParamField path="_metadataURI" type="string" required>元数据 URI</ParamField>
     <ParamField path="_valuation" type="uint256" required>估值</ParamField>
+
   </Accordion>
 
   <Accordion title="mint()" icon="coins">
@@ -216,6 +235,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     <ParamField path="amountUSDT" type="uint256" required>支付的 USDT 数量</ParamField>
     <ParamField path="signature" type="bytes" required>合规签名数据</ParamField>
     <ParamField path="expireTime" type="uint256" required>签名过期时间</ParamField>
+
   </Accordion>
 
   <Accordion title="burn()" icon="fire">
@@ -229,6 +249,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
 
     <ParamField path="from" type="address" required>要销毁代币的地址</ParamField>
     <ParamField path="amount" type="uint256" required>销毁数量</ParamField>
+
   </Accordion>
 
   <Accordion title="remainingForSale()" icon="calculator">
@@ -241,6 +262,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
     </CodeGroup>
 
     <ResponseField name="返回值" type="uint256">剩余可销售的代币数量</ResponseField>
+
   </Accordion>
 
   <Accordion title="usdtToTokenAmount()" icon="money-bill-transfer">
@@ -254,6 +276,7 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
 
     <ParamField path="amountUSDT" type="uint256" required>USDT 数量</ParamField>
     <ResponseField name="返回值" type="uint256">对应的代币数量</ResponseField>
+
   </Accordion>
 
   <Accordion title="tokenToUSDTAmount()" icon="money-bill-transfer">
@@ -267,5 +290,6 @@ description: "`RWAToken` 是 ArtStar 协议的核心真实世界资产 (RWA) 代
 
     <ParamField path="tokenAmount" type="uint256" required>代币数量</ParamField>
     <ResponseField name="返回值" type="uint256">所需的 USDT 金额</ResponseField>
+
   </Accordion>
 </AccordionGroup>

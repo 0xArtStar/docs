@@ -13,68 +13,93 @@ From a product perspective, KYC is not just a standalone form. It is a governing
 
 <AccordionGroup>
   <Accordion title="Why Does KYC Matter?" icon="shield-check">
-    ArtStar implements KYC to achieve the following objectives:
-    * Satisfy compliance requirements for art RWA offerings
-    * Provide a reliable basis for whitelist and access-control rules
-    * Prevent ineligible users from entering the purchase flow
-    * Consistently map off-chain review outcomes to on-chain prerequisites
+    ArtStar implements KYC to achieve the following objectives: * Satisfy
+    compliance requirements for art RWA offerings * Provide a reliable basis for
+    whitelist and access-control rules * Prevent ineligible users from entering
+    the purchase flow * Consistently map off-chain review outcomes to on-chain
+    prerequisites
   </Accordion>
   <Accordion title="How KYC Affects Purchase Eligibility" icon="lock">
-    KYC directly determines whether a user can move forward in the subscription flow. In most cases, only users with an approved KYC status can:
-    * Unlock the purchase entry point
-    * Proceed to the Mint flow
-    * Satisfy specific whitelist validation requirements
-    
-    If the status is `unverified`, `pending`, or `rejected`, the frontend should present a clear explanation of the current state and guide the user toward the next step.
+    KYC directly determines whether a user can move forward in the subscription
+    flow. In most cases, only users with an approved KYC status can: * Unlock
+    the purchase entry point * Proceed to the Mint flow * Satisfy specific
+    whitelist validation requirements If the status is `unverified`, `pending`,
+    or `rejected`, the frontend should present a clear explanation of the
+    current state and guide the user toward the next step.
   </Accordion>
 </AccordionGroup>
 
 ## KYC Status and Workflow
 
 <Card title="KYC Status Definition" icon="traffic-light">
-  These statuses are not merely display labels. They are gatekeeping signals that directly affect product behavior:
-  * `unverified`: Not yet verified
-  * `pending`: Under review
-  * `approved`: Approved
-  * `rejected`: Rejected
+  These statuses are not merely display labels. They are gatekeeping signals
+  that directly affect product behavior: * `unverified`: Not yet verified *
+  `pending`: Under review * `approved`: Approved * `rejected`: Rejected
 </Card>
 
 A typical asynchronous state-transition flow looks like this:
 
 <Steps>
-  <Step title="Start Verification">The user initiates the KYC flow from the frontend.</Step>
-  <Step title="Platform Initialization">The platform starts the third-party KYC verification process.</Step>
-  <Step title="Document Submission">The user submits identity documents and any required supporting information.</Step>
-  <Step title="Third-Party Review">The third-party provider reviews and validates the submitted materials.</Step>
-  <Step title="Status Synchronization">The review outcome is synced back to the platform backend through a webhook or polling mechanism.</Step>
-  <Step title="Status Update">The backend updates the user's KYC status in the database.</Step>
-  <Step title="UI Response">The frontend refreshes the user's available actions, such as enabling the purchase button, based on the latest status.</Step>
+  <Step title="Start Verification">
+    The user initiates the KYC flow from the frontend.
+  </Step>
+  <Step title="Platform Initialization">
+    The platform starts the third-party KYC verification process.
+  </Step>
+  <Step title="Document Submission">
+    The user submits identity documents and any required supporting information.
+  </Step>
+  <Step title="Third-Party Review">
+    The third-party provider reviews and validates the submitted materials.
+  </Step>
+  <Step title="Status Synchronization">
+    The review outcome is synced back to the platform backend through a webhook
+    or polling mechanism.
+  </Step>
+  <Step title="Status Update">
+    The backend updates the user's KYC status in the database.
+  </Step>
+  <Step title="UI Response">
+    The frontend refreshes the user's available actions, such as enabling the
+    purchase button, based on the latest status.
+  </Step>
 </Steps>
 
 ## Common Questions and Frontend Display
 
 <AccordionGroup>
   <Accordion title="Can users purchase while KYC is pending?">
-    Usually not. A `pending` status should not be treated as purchase-eligible unless the business rules explicitly allow it.
+    Usually not. A `pending` status should not be treated as purchase-eligible
+    unless the business rules explicitly allow it.
   </Accordion>
   <Accordion title="Will the status disappear after a page refresh?">
-    No. KYC status should be sourced from the database and backend query results, not from frontend-only in-memory state.
+    No. KYC status should be sourced from the database and backend query
+    results, not from frontend-only in-memory state.
   </Accordion>
   <Accordion title="Why does the page not update immediately after approval?">
-    This usually depends on the status synchronization strategy and can be affected by webhook delays, polling intervals, or frontend refresh timing.
+    This usually depends on the status synchronization strategy and can be
+    affected by webhook delays, polling intervals, or frontend refresh timing.
   </Accordion>
 </AccordionGroup>
 
 ### Pitfall Guide
 
 <Callout type="warning" title="Do not rely on frontend-local KYC state only">
-  If the user refreshes the page, switches devices, or signs in again, locally stored state can be lost. The source of truth must remain on the backend.
+  If the user refreshes the page, switches devices, or signs in again, locally
+  stored state can be lost. The source of truth must remain on the backend.
 </Callout>
 
-<Callout type="danger" title="`pending` and `unverified` are not interchangeable">
-  These states represent different product meanings. One indicates the process has not started, while the other means the submission is complete and awaiting a result. Copy and interaction logic must distinguish between them.
+<Callout
+  type="danger"
+  title="`pending` and `unverified` are not interchangeable"
+>
+  These states represent different product meanings. One indicates the process
+  has not started, while the other means the submission is complete and awaiting
+  a result. Copy and interaction logic must distinguish between them.
 </Callout>
 
 <Callout type="info" title="Update purchase controls when status changes">
-  When the KYC status changes, the Mint button, eligibility prompts, page copy, and guided actions should all update together to avoid mismatches between displayed status and actual permissions.
+  When the KYC status changes, the Mint button, eligibility prompts, page copy,
+  and guided actions should all update together to avoid mismatches between
+  displayed status and actual permissions.
 </Callout>

@@ -13,19 +13,20 @@ As a result, wallet connection and network switching are not just technical prer
 
 <AccordionGroup>
   <Accordion title="Why Is Wallet Connection Important?" icon="wallet">
-    In ArtStar, the wallet serves at least the following purposes:
-    * Identifies the user's on-chain address
-    * Works with signatures to complete login authentication
-    * Retrieves stablecoin balances and approval status
-    * Initiates on-chain transactions such as `Approve` and `Mint`
-    * Displays the user's holdings and asset history
+    In ArtStar, the wallet serves at least the following purposes: * Identifies
+    the user's on-chain address * Works with signatures to complete login
+    authentication * Retrieves stablecoin balances and approval status *
+    Initiates on-chain transactions such as `Approve` and `Mint` * Displays the
+    user's holdings and asset history
   </Accordion>
   <Accordion title="Network Guard Mechanism" icon="shield">
-    ArtStar's core interactions run on a designated blockchain. To prevent asset-reading errors or transaction failures caused by the wrong network, the frontend typically needs to:
-    * Detect the current chain ID and determine whether it matches the target network
-    * **Block critical write operations** when the user is on the wrong network
-    * Guide the user through one-click network switching
-    * Resume the interaction flow automatically after a successful switch
+    ArtStar's core interactions run on a designated blockchain. To prevent
+    asset-reading errors or transaction failures caused by the wrong network,
+    the frontend typically needs to: * Detect the current chain ID and determine
+    whether it matches the target network * **Block critical write operations**
+    when the user is on the wrong network * Guide the user through one-click
+    network switching * Resume the interaction flow automatically after a
+    successful switch
   </Accordion>
 </AccordionGroup>
 
@@ -34,11 +35,23 @@ As a result, wallet connection and network switching are not just technical prer
 From a product perspective, the goal of this step is not simply to "connect a wallet," but to allow the platform to identify and serve the current user correctly:
 
 <Steps>
-  <Step title="Connect Wallet">The user clicks Connect Wallet, which invokes the wallet extension or app.</Step>
-  <Step title="Get Address">The wallet authorizes the connection and returns the active address.</Step>
-  <Step title="State Initialization">The frontend initializes UI state associated with that address.</Step>
-  <Step title="Signature Login">If required, the user completes signature verification to establish a backend session.</Step>
-  <Step title="Data Loading">The frontend continues by reading balances, network details, and permission-related data before entering the core business flow.</Step>
+  <Step title="Connect Wallet">
+    The user clicks Connect Wallet, which invokes the wallet extension or app.
+  </Step>
+  <Step title="Get Address">
+    The wallet authorizes the connection and returns the active address.
+  </Step>
+  <Step title="State Initialization">
+    The frontend initializes UI state associated with that address.
+  </Step>
+  <Step title="Signature Login">
+    If required, the user completes signature verification to establish a
+    backend session.
+  </Step>
+  <Step title="Data Loading">
+    The frontend continues by reading balances, network details, and
+    permission-related data before entering the core business flow.
+  </Step>
 </Steps>
 
 ## Common Exceptions and Troubleshooting
@@ -46,24 +59,33 @@ From a product perspective, the goal of this step is not simply to "connect a wa
 Users may run into the following issues during wallet connection and network switching. The frontend should provide clear, actionable guidance rather than generic error messages:
 
 <Card title="Common Errors" icon="bug">
-  * The wallet extension is not installed or cannot be launched
-  * The user rejects the wallet connection request
-  * The active address cannot be retrieved
-  * The current network is incorrect, such as not being on BNB Chain
-  * The automatic network-switch request does not respond
-  * The in-app browser of a mobile wallet has compatibility issues
+  * The wallet extension is not installed or cannot be launched * The user
+  rejects the wallet connection request * The active address cannot be retrieved
+  * The current network is incorrect, such as not being on BNB Chain * The
+  automatic network-switch request does not respond * The in-app browser of a
+  mobile wallet has compatibility issues
 </Card>
 
 ## Pitfall Guide
 
 <Callout type="warning" title="Connecting a wallet does not equal logging in">
-  Wallet connection only provides the address. If the platform also requires a signature-based backend session, the user may still be "connected but not signed in," and the frontend should guide them accordingly.
+  Wallet connection only provides the address. If the platform also requires a
+  signature-based backend session, the user may still be "connected but not
+  signed in," and the frontend should guide them accordingly.
 </Callout>
 
-<Callout type="danger" title="Automatic network switching is not guaranteed to succeed">
-  Some wallets, browsers, or mobile environments do not support reliable automatic switching. Do not assume a single switch call completes successfully. Always validate the result against the actual chain ID afterward.
+<Callout
+  type="danger"
+  title="Automatic network switching is not guaranteed to succeed"
+>
+  Some wallets, browsers, or mobile environments do not support reliable
+  automatic switching. Do not assume a single switch call completes
+  successfully. Always validate the result against the actual chain ID
+  afterward.
 </Callout>
 
 <Callout type="info" title="Clear dependent state after wallet disconnection">
-  When the user disconnects the wallet, the platform should clear page state, cached data, and session information tied to that address to prevent issues caused by stale data.
+  When the user disconnects the wallet, the platform should clear page state,
+  cached data, and session information tied to that address to prevent issues
+  caused by stale data.
 </Callout>

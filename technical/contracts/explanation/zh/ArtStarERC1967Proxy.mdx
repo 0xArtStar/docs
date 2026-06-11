@@ -3,7 +3,11 @@ title: "ArtStarERC1967Proxy"
 description: "ArtStarERC1967Proxy 是 ArtStar 合约体系中的代理壳合约。它本身的源码非常短，只是对 OpenZeppelin ERC1967Proxy 的一次轻量封装，但在整个升级架构里承担着关键角色。"
 ---
 
-<Card title="Source code" icon="github" href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol">
+<Card
+  title="Source code"
+  icon="github"
+  href="https://github.com/0xArtStar/core-contracts/blob/main/contracts/proxy/ArtStarERC1967Proxy.sol"
+>
   查看 ArtStarERC1967Proxy 合约源码
 </Card>
 
@@ -19,10 +23,11 @@ description: "ArtStarERC1967Proxy 是 ArtStar 合约体系中的代理壳合约�
 - 为 Hardhat Ignition 部署流程提供一个稳定、明确、可复用的代理合约入口。
 
 从部署和运行层面看，它决定了以下事实：
+
 - 用户交互的地址通常是代理地址，而不是实现合约地址。
 - 实现合约可以被替换，而代理地址和代理状态会被保留。
 - 业务合约的初始化并不是在实现合约构造函数中完成，而是在部署代理时通过 `data` 一次性调用。
-</Accordion>
+  </Accordion>
 
 <Accordion title="3. ERC-1967 标准说明" icon="book">
 `ERC-1967` 是代理模式中的一个关键标准，它规定了实现合约地址等关键元数据应该存在哪些固定存储槽位中。标准化这些槽位的价值在于：
@@ -32,21 +37,19 @@ description: "ArtStarERC1967Proxy 是 ArtStar 合约体系中的代理壳合约�
 - 让升级和部署遵循业界通用约定，而不是项目自定义布局。
 
 在 ArtStar 中，直接复用 OpenZeppelin 的 `ERC1967Proxy` 实现，这些标准化槽位由 OpenZeppelin 负责维护。
+
 </Accordion>
 
 <Accordion title="4. UUPS 代理模式说明" icon="arrows-rotate">
 本项目采用的是 **UUPS 升级模式**，而不是透明代理模式。
 
 <Tabs>
-  <Tab title="透明代理 (Transparent)">
-    通常把升级管理能力放在代理侧。
-  </Tab>
-  <Tab title="UUPS">
-    把升级入口和升级授权逻辑放在实现合约侧。
-  </Tab>
+  <Tab title="透明代理 (Transparent)">通常把升级管理能力放在代理侧。</Tab>
+  <Tab title="UUPS">把升级入口和升级授权逻辑放在实现合约侧。</Tab>
 </Tabs>
 
 这意味着 `ArtStarERC1967Proxy` 自己并不包含升级授权策略。真正决定“谁可以升级”的是实现合约中的 `_authorizeUpgrade()`：
+
 - `RWAToken` 通过 `onlyOwner` 控制升级授权。
 - `ComplianceManage` 也通过 `onlyOwner` 控制升级授权。
 
@@ -89,6 +92,7 @@ contract ArtStarERC1967Proxy is ERC1967Proxy {
 2. `data`：部署代理后立即委托执行的初始化 calldata。
 
 这两个参数共同完成了“部署代理 + 初始化业务状态”的过程。这种模式的优点是初始化与代理部署一次完成，避免部署后忘记初始化带来的高危问题。
+
 </Accordion>
 
 <Accordion title="7. 与 Ignition 部署模块的关系" icon="fire">
@@ -98,6 +102,7 @@ Ignition 模块对该代理的使用非常直接：
 - `RWAToken`：先部署实现合约，再把名称、符号等参数编码为 `initialize(...)` 传入代理，映射为 `RWATokenProxy`。
 
 随后，部署脚本还会继续调用代理实例上的业务函数。这说明代理不只是一个部署期临时对象，而是整个系统运行期的正式入口。
+
 </Accordion>
 
 <Accordion title="8. 与实现合约的职责边界" icon="shield">
@@ -141,5 +146,6 @@ Ignition 模块对该代理的使用非常直接：
 - 部署脚本如何一次性完成代理初始化并让业务系统真正可用。
 
 如果没有单独文档，读者容易产生误判。正因如此，即便它只是一层薄封装，仍然值得单独说明。
+
 </Accordion>
 </AccordionGroup>

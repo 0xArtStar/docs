@@ -12,11 +12,11 @@ ArtStar 基于主流公链基础设施，采用 ERC-20 标准协议对实物艺�
 
 ArtStar 采用 [ERC-20](https://ethereum.org/zh/developers/documentation/standards/tokens/erc-20/) 标准作为资产代币化的基础协议。
 
-| 参数             | 配置值              | 说明                                 |
-| ---------------- | ------------------- | ------------------------------------ |
-| **Decimals**     | 18                  | 最高精度，确保资产分割的灵活性       |
-| **Symbol**       | ARTS / 资产特定符号 | 便于市场识别与交易所上架             |
-| **Total Supply** | 与实物资产价值锚定  | 通过合规管理合约总量固定            |
+| 参数             | 配置值              | 说明                           |
+| ---------------- | ------------------- | ------------------------------ |
+| **Decimals**     | 18                  | 最高精度，确保资产分割的灵活性 |
+| **Symbol**       | ARTS / 资产特定符号 | 便于市场识别与交易所上架       |
+| **Total Supply** | 与实物资产价值锚定  | 通过合规管理合约总量固定       |
 
 ### 代币化流程
 
@@ -39,10 +39,10 @@ ArtStar 构建了一套完整的链上合规管理合约系统，通过签名验
 {/* ```solidity
 // 核心合规管理接口
 interface IComplianceManage {
-    // 管理员操作
-    function setAssetController(address controller) external;
-    function pause() external;
-    function unpause() external;
+// 管理员操作
+function setAssetController(address controller) external;
+function pause() external;
+function unpause() external;
 
     // 合规操作
     function addToWhitelist(address account) external returns (bool);
@@ -56,6 +56,7 @@ interface IComplianceManage {
     // 查询接口
     function isWhitelisted(address account) external view returns (bool);
     function getComplianceStatus(address account) external view returns (ComplianceStatus);
+
 }
 ``` */}
 
@@ -87,7 +88,7 @@ function _verifySignature(
 
         return true;
     }
-```
+````
 
 ### 白名单管理机制
 
@@ -236,7 +237,7 @@ ArtStar 代币化方案兼容以下代币标准演进路径：
 | **Web3 库**  | wagmi + viem                  | 符合ethers.js v6 最佳实践 |
 | **测试框架** | Hardhat + Vitest              | 合约与组件全面测试        |
 | **Chain ID** | BSC Mainnet: 56 / Testnet: 97 | 适配 BSC 网络             |
-| **身份验证** | Supabase Auth / Privy                | Web2 体验的 Web3 身份方案 |
+| **身份验证** | Supabase Auth / Privy         | Web2 体验的 Web3 身份方案 |
 
 ---
 
